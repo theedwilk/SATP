@@ -16,7 +16,9 @@ from known_urls import get_known_url
 from amazonas_portals import get_amazonas_url, get_all_amazonas_municipalities
 
 # Configuração da aplicação
-app = Flask(__name__, static_folder='../satp-frontend/build', static_url_path='')
+app = Flask(__name__, 
+            static_folder='../sapt-frontend/build', 
+            static_url_path='')
 CORS(app)
 
 # ===== ROTAS PARA SERVIR O REACT (DEVEM VIR PRIMEIRO) =====
