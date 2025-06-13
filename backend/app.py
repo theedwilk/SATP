@@ -1,279 +1,253 @@
-# app.py - Versão completa
-from flask import Flask, request, jsonify, Response, send_from_directory
+# app.py - Servidor Flask
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
-import scraper
-import queue
-import threading
 import json
-import time
-import os
-import pandas as pd
-from datetime import datetime, timedelta, date
-from utils import save_criteria_json
-import requests
-from bs4 import BeautifulSoup
-from known_urls import get_known_url
-from amazonas_portals import get_amazonas_url, get_all_amazonas_municipalities
+import threading
+import queue
+from datetime import datetime
+from scraper import TransparenciaScraperTurbinado, encontrar_site_oficial
 
-# Configuração da aplicação
-app = Flask(__name__, 
-            static_folder='../sapt-frontend/build', 
-            static_url_path='')
+app = Flask(__name__)
 CORS(app)
 
-# ===== ROTAS PARA SERVIR O REACT (DEVEM VIR PRIMEIRO) =====
-@app.route('/')
-def index():
-    return send_from_directory(app.static_folder, 'index.html')
+# Variáveis globais para controle de avaliação
+current_evaluation = None
+evaluation_queue = queue.Queue()
+stop_evaluation = False
 
-# Rota catch-all para o React Router
-@app.route('/<path:path>')
-def serve(path):
-    # Se for uma rota da API, deixa passar
-    if path.startswith('api/'):
-        return jsonify({'error': 'Not found'}), 404
+@app.route('/api/avaliar-transparencia', methods=['POST'])
+def avaliar_transparencia():
+    global current_evaluation, stop_evaluation
     
-    # Se o arquivo existe no build, serve ele
-    if os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    
-    # Caso contrário, retorna o index.html (para o React Router funcionar)
-    return send_from_directory(app.static_folder, 'index.html')
-
-# ===== SUAS ROTAS DE API EXISTENTES =====
-
-# Fila global para comunicação entre threads
-result_queue = queue.Queue()
-
-@app.route('/api/analyze', methods=['POST'])
-def analyze():
-    data = request.json
-    url = data.get('url')
-    
-    if not url:
-        return jsonify({"error": "URL é obrigatória"}), 400
-    
-    # Cria um ID único para esta análise
-    analysis_id = str(time.time())
-    
-    # Inicia a análise em uma thread separada
-    thread = threading.Thread(target=run_analysis, args=(url, analysis_id))
-    thread.start()
-    
-    return jsonify({"analysis_id": analysis_id, "status": "started"})
-
-def run_analysis(url, analysis_id):
     try:
-        # Executa o scraper
-        results = scraper.analyze_portal(url)
+        data = request.get_json()
         
-        # Adiciona o ID da análise aos resultados
-        results['analysis_id'] = analysis_id
-        results['status'] = 'completed'
-        
-        # Coloca os resultados na fila
-        result_queue.put(results)
-    except Exception as e:
-        error_result = {
-            'analysis_id': analysis_id,
-            'status': 'error',
-            'error': str(e)
-        }
-        result_queue.put(error_result)
-
-@app.route('/api/results/<analysis_id>')
-def get_results(analysis_id):
-    # Procura pelos resultados na fila
-    results = []
-    while not result_queue.empty():
-        results.append(result_queue.get())
-    
-    # Procura pelo resultado específico
-    for result in results:
-        if result.get('analysis_id') == analysis_id:
-            return jsonify(result)
-        else:
-            # Recoloca na fila se não for o resultado procurado
-            result_queue.put(result)
-    
-    return jsonify({"status": "processing"}), 202
-
-@app.route('/api/stream-analysis', methods=['POST'])
-def stream_analysis():
-    data = request.json
-    url = data.get('url')
-    
-    if not url:
-        return jsonify({"error": "URL é obrigatória"}), 400
-    
-    def generate():
-        try:
-            # Envia status inicial
-            yield f"data: {json.dumps({'status': 'starting', 'message': 'Iniciando análise...'})}\n\n"
+        # Valida se recebeu os dados necessários
+        if not all(key in data for key in ['esfera', 'matriz', 'orgao']):
+            return jsonify({'error': 'Dados insuficientes. Necessário: esfera, matriz, orgao'}), 400
             
-            # Executa o scraper com streaming
-            for update in scraper.analyze_portal_stream(url):
-                yield f"data: {json.dumps(update)}\n\n"
-                time.sleep(0.1)  # Pequeno delay para não sobrecarregar
-                
-        except Exception as e:
-            yield f"data: {json.dumps({'status': 'error', 'error': str(e)})}\n\n"
-    
-    return Response(generate(), mimetype='text/event-stream')
-
-@app.route('/api/save-criteria', methods=['POST'])
-def save_criteria():
-    try:
-        data = request.json
-        if not data:
-            return jsonify({"error": "Dados não fornecidos"}), 400
+        esfera = data['esfera']
+        matriz = data['matriz']
+        orgao = data['orgao']
         
-        # Salva os critérios usando a função do utils.py
-        filepath = save_criteria_json(data)
+        print(f"🔍 Buscando site oficial para: {orgao}")
+        
+        # Reset do controle de parada
+        stop_evaluation = False
+        
+        # Encontra o site oficial através de busca
+        site_oficial = encontrar_site_oficial(esfera, matriz, orgao)
+        
+        if not site_oficial:
+            return jsonify({'error': 'Site oficial não encontrado'}), 404
+            
+        print(f"✅ Site encontrado: {site_oficial}")
+        
+        # Inicia avaliação em thread separada
+        def run_evaluation():
+            avaliar_transparencia_portal(site_oficial, esfera, matriz, orgao)
+        
+        current_evaluation = threading.Thread(target=run_evaluation)
+        current_evaluation.start()
         
         return jsonify({
-            "success": True,
-            "message": "Critérios salvos com sucesso",
-            "file": filepath
+            'message': 'Avaliação iniciada',
+            'orgao': orgao,
+            'site_encontrado': site_oficial,
+            'totalPerguntas': 14
         })
-    except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": str(e)
-        }), 500
-
-@app.route('/api/export-results', methods=['POST'])
-def export_results():
-    try:
-        data = request.json
-        results = data.get('results', {})
-        format_type = data.get('format', 'excel')
         
-        if format_type == 'excel':
-            # Criar DataFrame com os resultados
-            df_data = []
-            
-            # Adicionar informações gerais
-            df_data.append({
-                'Categoria': 'Informações Gerais',
-                'Item': 'URL',
-                'Valor': results.get('url', ''),
-                'Pontuação': ''
-            })
-            df_data.append({
-                'Categoria': 'Informações Gerais',
-                'Item': 'Data da Análise',
-                'Valor': results.get('timestamp', ''),
-                'Pontuação': ''
-            })
-            df_data.append({
-                'Categoria': 'Informações Gerais',
-                'Item': 'Pontuação Total',
-                'Valor': '',
-                'Pontuação': f"{results.get('score', 0):.1f}%"
-            })
-            
-            # Adicionar critérios
-            criteria = results.get('criteria', {})
-            for category, items in criteria.items():
-                for item in items:
-                    df_data.append({
-                        'Categoria': category,
-                        'Item': item['name'],
-                        'Valor': 'Sim' if item['found'] else 'Não',
-                        'Pontuação': f"{item['score']:.1f}" if item['found'] else '0.0'
-                    })
-            
-            # Criar DataFrame
-            df = pd.DataFrame(df_data)
-            
-            # Salvar como Excel
-            filename = f"analise_portal_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
-            filepath = os.path.join('exports', filename)
-            
-            # Criar diretório se não existir
-            os.makedirs('exports', exist_ok=True)
-            
-            # Salvar Excel com formatação
-            with pd.ExcelWriter(filepath, engine='openpyxl') as writer:
-                df.to_excel(writer, sheet_name='Análise', index=False)
-                
-                # Ajustar largura das colunas
-                worksheet = writer.sheets['Análise']
-                for column in df:
-                    column_width = max(df[column].astype(str).map(len).max(), len(column))
-                    col_idx = df.columns.get_loc(column)
-                    worksheet.column_dimensions[chr(65 + col_idx)].width = column_width + 2
-            
-            return jsonify({
-                "success": True,
-                "filename": filename,
-                "message": "Arquivo exportado com sucesso"
-            })
-            
-        elif format_type == 'pdf':
-            # Implementar exportação PDF se necessário
-            return jsonify({
-                "success": False,
-                "error": "Exportação PDF ainda não implementada"
-            }), 501
-            
     except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": str(e)
-        }), 500
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/stream-resultados')
+def stream_resultados():
+    """Endpoint para streaming dos resultados via Server-Sent Events"""
+    def generate():
+        global evaluation_queue
+        
+        while True:
+            try:
+                resultado = evaluation_queue.get(timeout=1)
+                
+                if resultado.get('type') == 'complete':
+                    yield f"event: complete\ndata: {json.dumps({'message': 'Avaliação concluída'})}\n\n"
+                    break
+                elif resultado.get('type') == 'error':
+                    yield f"event: error\ndata: {json.dumps(resultado)}\n\n"
+                    break
+                elif resultado.get('type') == 'status':
+                    yield f"data: {json.dumps(resultado)}\n\n"
+                else:
+                    yield f"data: {json.dumps(resultado)}\n\n"
+                    
+            except queue.Empty:
+                yield f"data: {json.dumps({'type': 'heartbeat'})}\n\n"
+            except Exception as e:
+                yield f"event: error\ndata: {json.dumps({'message': str(e)})}\n\n"
+                break
+    
+    return Response(
+        generate(),
+        mimetype='text/event-stream',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
+
+@app.route('/api/cancelar-avaliacao', methods=['POST'])
+def cancelar_avaliacao():
+    """Cancela a avaliação em andamento"""
+    global stop_evaluation, current_evaluation
+    
+    stop_evaluation = True
+    
+    if current_evaluation and current_evaluation.is_alive():
+        current_evaluation.join(timeout=5)
+    
+    return jsonify({'message': 'Avaliação cancelada'})
 
 @app.route('/api/health')
-def health():
-    return jsonify({"status": "healthy", "timestamp": datetime.now().isoformat()})
+def health_check():
+    """Endpoint para verificar se a API está funcionando"""
+    return jsonify({
+        'status': 'ok',
+        'message': 'Sistema funcionando',
+        'timestamp': datetime.now().isoformat()
+    })
 
-# Nova rota para buscar URL conhecida
-@app.route('/api/known-url/<state>/<city>')
-def get_known_url_route(state, city):
-    """Busca URL conhecida para um município"""
-    url = get_known_url(state, city)
-    if url:
-        return jsonify({"url": url, "found": True})
-    else:
-        return jsonify({"url": None, "found": False})
-
-# Nova rota para buscar URL do Amazonas
-@app.route('/api/amazonas-url/<municipio>')
-def get_amazonas_url_route(municipio):
-    """Busca URL do portal de transparência de um município do Amazonas"""
+def avaliar_transparencia_portal(url, esfera, matriz, orgao):
+    """Função principal que coordena a avaliação"""
+    global stop_evaluation, evaluation_queue
+    
+    # Lista de critérios
+    criterios = [
+        {
+            "id": "1.1",
+            "nome": "Estrutura Organizacional",
+            "pergunta": "O portal disponibiliza a estrutura organizacional da entidade (organograma)?",
+            "termos_busca": ["organograma", "estrutura organizacional", "hierarquia", "organização"]
+        },
+        {
+            "id": "1.2",
+            "nome": "Competências",
+            "pergunta": "O portal disponibiliza as competências de cada unidade?",
+            "termos_busca": ["competências", "atribuições", "responsabilidades", "funções"]
+        },
+        {
+            "id": "1.3",
+            "nome": "Base Jurídica",
+            "pergunta": "O portal disponibiliza a base jurídica da estrutura organizacional?",
+            "termos_busca": ["base jurídica", "base legal", "legislação", "lei", "decreto"]
+        },
+        {
+            "id": "1.4",
+            "nome": "Lista de Autoridades",
+            "pergunta": "O portal disponibiliza a lista dos principais cargos e seus ocupantes?",
+            "termos_busca": ["autoridades", "dirigentes", "gestores", "secretários", "diretores"]
+        },
+        {
+            "id": "2.1",
+            "nome": "Agenda de Autoridades",
+            "pergunta": "O portal disponibiliza agenda de autoridades?",
+            "termos_busca": ["agenda", "compromissos", "eventos", "reuniões", "audiências"]
+        },
+        {
+            "id": "2.2",
+            "nome": "Horários de Atendimento",
+            "pergunta": "O portal disponibiliza horários de atendimento?",
+            "termos_busca": ["horário de atendimento", "funcionamento", "expediente"]
+        },
+        {
+            "id": "2.3",
+            "nome": "Contatos",
+            "pergunta": "O portal disponibiliza telefones, endereços e e-mails?",
+            "termos_busca": ["contato", "telefone", "endereço", "e-mail", "fale conosco"]
+        },
+        {
+            "id": "3.1",
+            "nome": "Receitas",
+            "pergunta": "O portal disponibiliza informações sobre receitas?",
+            "termos_busca": ["receitas", "arrecadação", "recursos", "orçamento"]
+        },
+        {
+            "id": "4.1",
+            "nome": "Despesas",
+            "pergunta": "O portal disponibiliza informações sobre despesas?",
+            "termos_busca": ["despesas", "gastos", "pagamentos", "empenhos"]
+        },
+        {
+            "id": "8.1",
+            "nome": "Licitações",
+            "pergunta": "O portal disponibiliza informações sobre licitações?",
+            "termos_busca": ["licitações", "licitação", "pregão", "concorrência", "editais"]
+        },
+        {
+            "id": "9.1",
+            "nome": "Contratos",
+            "pergunta": "O portal disponibiliza informações sobre contratos?",
+            "termos_busca": ["contratos", "contratações", "termos aditivos", "fornecedores"]
+        },
+        {
+            "id": "6.1",
+            "nome": "Servidores",
+            "pergunta": "O portal disponibiliza informações sobre servidores?",
+            "termos_busca": ["servidores", "funcionários", "folha de pagamento", "remuneração"]
+        },
+        {
+            "id": "12.1",
+            "nome": "SIC Físico",
+            "pergunta": "O portal indica a existência de SIC físico?",
+            "termos_busca": ["sic", "serviço de informação ao cidadão", "atendimento presencial"]
+        },
+        {
+            "id": "12.2",
+            "nome": "e-SIC",
+            "pergunta": "O portal disponibiliza e-SIC?",
+            "termos_busca": ["e-sic", "esic", "sic eletrônico", "pedido de informação"]
+        }
+    ]
+    
+    scraper = TransparenciaScraperTurbinado(headless=True)
+    
     try:
-        url = get_amazonas_url(municipio)
-        if url:
-            return jsonify({
-                "url": url,
-                "found": True,
-                "municipio": municipio
-            })
-        else:
-            return jsonify({
-                "url": None,
-                "found": False,
-                "municipio": municipio,
-                "message": "URL não encontrada para este município"
-            })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-# Nova rota para listar todos os municípios do Amazonas
-@app.route('/api/amazonas-municipios')
-def list_amazonas_municipios():
-    """Lista todos os municípios do Amazonas disponíveis"""
-    try:
-        municipios = get_all_amazonas_municipalities()
-        return jsonify({
-            "municipios": municipios,
-            "total": len(municipios)
+        print(f"🔍 Avaliando transparência de: {orgao}")
+        
+        evaluation_queue.put({
+            'type': 'status',
+            'message': f'Iniciando avaliação de {len(criterios)} critérios...',
+            'progress': 0
         })
+        
+        for i, criterio in enumerate(criterios):
+            if stop_evaluation:
+                break
+                
+            print(f"📋 Critério {i+1}/{len(criterios)}: {criterio['nome']}")
+            
+            evaluation_queue.put({
+                'type': 'status',
+                'message': f'Avaliando: {criterio["nome"]}',
+                'progress': int((i / len(criterios)) * 100)
+            })
+            
+            resultado = scraper.avaliar_criterio(url, criterio)
+            resultado['id'] = criterio['id']
+            
+            evaluation_queue.put(resultado)
+            
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        evaluation_queue.put({
+            'type': 'error',
+            'message': f'Erro: {str(e)}'
+        })
+    finally:
+        scraper.driver.quit()
+        evaluation_queue.put({'type': 'complete'})
 
-# NO FINAL DO ARQUIVO:
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    print("🚀 Servidor iniciado!")
+    print("📍 http://localhost:5000")
+    app.run(debug=True, host='0.0.0.0', port=5000)
