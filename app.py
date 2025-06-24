@@ -1,10 +1,17 @@
-import streamlit as st
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
+import numpy as np
 from datetime import datetime
-import json
+import ipywidgets as widgets
+from IPython.display import display, clear_output, HTML
+import requests
+from urllib.parse import urlparse, urljoin, urlsplit
 import time
+from bs4 import BeautifulSoup
+import re
+import warnings
+warnings.filterwarnings('ignore')
+import streamlit as st
+import json
 
 # Configuração da página
 st.set_page_config(
