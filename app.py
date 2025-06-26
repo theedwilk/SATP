@@ -105,7 +105,7 @@ st.markdown("""
         padding: 0.5rem;
         border-radius: 4px;
         margin-top: 0.5rem;
-        word-break: break-all; /* Quebra a linha para URLs longas */
+        word-break: break-all;
     }
     /* Scroll suave */
     html {
@@ -116,21 +116,57 @@ st.markdown("""
         border-top: 2px solid #e5e7eb;
         margin: 2rem 0;
     }
+    
+    /* ===== ADICIONE ESTES ESTILOS NOVOS PARA PROGRESSO ===== */
+    .progress-container {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .status-active {
+        background-color: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 0.5rem;
+        border-radius: 4px;
+        margin: 0.5rem 0;
+    }
+    
+    .log-entry {
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        background-color: #f5f5f5;
+        padding: 0.25rem;
+        border-radius: 3px;
+        margin: 0.2rem 0;
+    }
+    
+    .metric-updating {
+        animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
 def adicionar_botao_topo():
-    """Adiciona um botão flutuante para voltar ao topo."""
+    """Adiciona um botão flutuante avançado para voltar ao topo."""
     st.markdown("""
     <style>
-    /* Botão flutuante para voltar ao topo */
+    /* Botão flutuante para voltar ao topo - Versão Melhorada */
     .botao-topo {
         position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 60px;
-        height: 60px;
-        background-color: #1e40af;
+        bottom: 30px;
+        right: 30px;
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         color: white;
         border: none;
         border-radius: 50%;
@@ -138,45 +174,185 @@ def adicionar_botao_topo():
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
+        font-size: 28px;
         font-weight: bold;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
+        box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
+        z-index: 9999;
         opacity: 0;
+        visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.3s, transform 0.3s;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         text-decoration: none;
+        backdrop-filter: blur(10px);
     }
+    
     .botao-topo.show {
         opacity: 1;
+        visibility: visible;
         pointer-events: all;
-        transform: scale(1);
+        transform: translateY(0);
     }
+    
     .botao-topo:hover {
-        background-color: #2563eb;
-        transform: translateY(-5px);
+        background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+        transform: translateY(-8px) scale(1.1);
+        box-shadow: 0 15px 35px rgba(30, 64, 175, 0.6);
     }
+    
+    .botao-topo:active {
+        transform: translateY(-5px) scale(1.05);
+    }
+    
+    /* Indicador de progresso circular */
+    .botao-topo::before {
+        content: '';
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #60a5fa;
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+    
+    .botao-topo:hover::before {
+        opacity: 1;
+        animation: spin 2s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Tooltip */
+    .botao-topo::after {
+        content: 'Voltar ao Topo';
+        position: absolute;
+        right: 80px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: normal;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .botao-topo:hover::after {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(-50%) translateX(-5px);
+    }
+    
     /* Animação suave ao scroll */
     html {
         scroll-behavior: smooth;
     }
-    /* Seções bem definidas */
-    .section-divider {
-        border-top: 2px solid #e5e7eb;
-        margin: 2rem 0;
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .botao-topo {
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .botao-topo::after {
+            display: none;
+        }
     }
     </style>
-    <a href="#top" class="botao-topo" id="btnTopo" title="Voltar ao topo">↑</a>
+    
+    <div id="botaoTopo" class="botao-topo" onclick="voltarAoTopo()" title="Voltar ao topo">
+        ↑
+    </div>
+    
     <script>
-    // Mostrar/esconder o botão com base no scroll
-    const botaoTopo = document.getElementById('btnTopo');
-    window.onscroll = function() {
-        if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-            botaoTopo.classList.add('show');
+    // Função para voltar ao topo
+    function voltarAoTopo() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+    
+    // Controle de visibilidade do botão
+    function controlarBotaoTopo() {
+        const botao = document.getElementById('botaoTopo');
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        
+        // Mostra o botão após rolar 300px
+        if (scrollTop > 300) {
+            botao.classList.add('show');
         } else {
-            botaoTopo.classList.remove('show');
+            botao.classList.remove('show');
         }
-    };
+        
+        // Calcula progresso do scroll (opcional - para futuras melhorias)
+        const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+        
+        // Adiciona classe especial quando próximo do final
+        if (scrollPercent > 80) {
+            botao.style.background = 'linear-gradient(135deg, #059669 0%, #10b981 100%)';
+        } else {
+            botao.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)';
+        }
+    }
+    
+    // Event listeners
+    window.addEventListener('scroll', controlarBotaoTopo);
+    window.addEventListener('load', controlarBotaoTopo);
+    
+    // Adiciona efeito de ripple ao clicar
+    document.getElementById('botaoTopo').addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.style.position = 'absolute';
+        ripple.style.borderRadius = '50%';
+        ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+        ripple.style.transform = 'scale(0)';
+        ripple.style.animation = 'ripple 0.6s linear';
+        ripple.style.pointerEvents = 'none';
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+    
+    // CSS para animação de ripple
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes ripple {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
     </script>
     """, unsafe_allow_html=True)
 
@@ -494,8 +670,8 @@ class AuditoriaTransparenciaCriterios:
             observacoes=observacoes
         )
 
-    def auditoria_completa_criterios(self, transparencia_url: str, orgao_nome: str, site_url: Optional[str] = None) -> Dict:
-        """Executa a auditoria completa para todos os critérios."""
+    def auditoria_completa_criterios(self, transparencia_url: str, orgao_nome: str, site_url: Optional[str] = None, progress_callback=None) -> Dict:
+        """Executa a auditoria completa para todos os critérios com callback de progresso."""
         start_time = time.time()
         resultados_criterios = []
         links_evidencia = []
@@ -505,14 +681,26 @@ class AuditoriaTransparenciaCriterios:
         # Ordena os critérios por ID para exibição
         criterios_ordenados = sorted(self.criterios.values(), key=lambda c: c.id_criterio)
 
-        for criterio in criterios_ordenados:
+        # Callback inicial
+        if progress_callback:
+            progress_callback(0, total_criterios, "🚀 Iniciando auditoria...", "Preparando análise dos critérios")
+
+        for i, criterio in enumerate(criterios_ordenados):
+            # Atualiza progresso
+            if progress_callback:
+                progress_callback(
+                    i, 
+                    total_criterios, 
+                    f"🔍 Analisando critério {criterio.id_criterio}",
+                    f"Verificando: {criterio.criterio[:60]}..."
+                )
+
             # Para o critério 1.1 (site oficial), verificamos o site_url, não o de transparência
             url_para_verificar = transparencia_url
             if criterio.id_criterio == "1.1":
-                 url_para_verificar = site_url
+                url_para_verificar = site_url
             elif criterio.id_criterio == "1.3":
-                 # Critério 1.3 é sobre a visibilidade na capa do SITE, não do portal
-                 url_para_verificar = site_url
+                url_para_verificar = site_url
 
             resultado = self._verificar_criterio(url_para_verificar, criterio, site_url)
 
@@ -540,9 +728,27 @@ class AuditoriaTransparenciaCriterios:
                     "Texto Evidência": resultado.texto_evidencia
                 })
 
+            # Atualiza progresso com resultado
+            if progress_callback:
+                status_emoji = "✅" if resultado.disponivel else "❌"
+                progress_callback(
+                    i + 1, 
+                    total_criterios, 
+                    f"{status_emoji} Critério {criterio.id_criterio} concluído",
+                    f"Conformes: {criterios_conformes}/{i+1} | {resultado.metodo_encontrado}"
+                )
+
+        # Callback final
+        if progress_callback:
+            progress_callback(
+                total_criterios, 
+                total_criterios, 
+                "🎉 Auditoria concluída!",
+                f"Análise finalizada: {criterios_conformes}/{total_criterios} critérios conformes"
+            )
+
         end_time = time.time()
         tempo_auditoria = end_time - start_time
-
         percentual_geral = (criterios_conformes / total_criterios) * 100 if total_criterios > 0 else 0
 
         return {
@@ -712,18 +918,68 @@ def main():
                         cor = "🔴" if criterio['classificacao'] == 'Essencial' else "🟡" if criterio['classificacao'] == 'Obrigatória' else "🟢"
                         st.write(f"  {cor} {criterio['id']} - {criterio['criterio'][:80]}...")
             
+            # Botão deve ficar fora do loop!
             if st.button("🚀 Iniciar Auditoria Detalhada", type="primary", use_container_width=True):
                 # Cria auditor com critérios específicos do poder
                 auditor = AuditoriaTransparenciaCriterios(criterios_auditoria)
                 
-                with st.spinner(f"Executando auditoria detalhada no portal: {transparencia_url}..."):
+                # ===== SISTEMA DE PROGRESSO EM TEMPO REAL =====
+                
+                # Container de progresso simples
+                progress_placeholder = st.empty()
+                
+                with progress_placeholder.container():
+                    st.info("🚀 **Iniciando auditoria...** Preparando análise dos critérios")
+                    progress_bar = st.progress(0)
+                    status_text = st.empty()
+                
+                # Função de callback simplificada
+                def simple_progress(current, total, status, detail):
+                    progress = current / total if total > 0 else 0
+                    progress_bar.progress(progress)
+                    
+                    # Atualiza status
+                    percentage = int(progress * 100)
+                    status_text.markdown(f"""
+                    **🔄 Progresso: {percentage}%** ({current}/{total})
+                    
+                    📝 **Ação atual:** {status}
+                    
+                    ℹ️ **Detalhes:** {detail}
+                    """)
+                
+                try:
+                    start_time = time.time()
                     resultado = auditor.auditoria_completa_criterios(
                         transparencia_url,
                         st.session_state.selected_orgao,
-                        site_url # Passa o URL do site principal também
+                        site_url,
+                        progress_callback=simple_progress
                     )
-                st.session_state.resultado_auditoria = resultado
-                st.success("✅ Auditoria concluída!")
+                    
+                    # Limpa progresso
+                    progress_placeholder.empty()
+                    
+                    # Salva e mostra resultado
+                    st.session_state.resultado_auditoria = resultado
+                    st.success(f"""
+                    ✅ **Auditoria concluída com sucesso!**
+                    
+                    📊 **Resultados:**
+                    - **Conformidade:** {resultado['metricas_conformidade']['percentual_geral']:.1f}%
+                    - **Critérios conformes:** {resultado['metricas_conformidade']['criterios_conformes']}/{resultado['metricas_conformidade']['total_criterios']}
+                    - **Tempo total:** {resultado['tempo_auditoria_segundos']:.1f} segundos
+                    """)
+                    
+                except Exception as e:
+                    progress_placeholder.empty()
+                    st.error(f"""
+                    ❌ **Erro durante a auditoria:**
+                    
+                    {str(e)}
+                    
+                    Por favor, tente novamente ou verifique a conectividade com o portal.
+                    """)
 
             # ===== SEÇÃO 3: RESULTADOS DA AUDITORIA (Métricas e Exportação) =====
             if "resultado_auditoria" in st.session_state and st.session_state.resultado_auditoria:
