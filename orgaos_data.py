@@ -12,8 +12,8 @@ ORGAOS_DATA = {
         },
         "Poder Legislativo": {
             "Assembleia Legislativa (ALEAM)": {
-                "site": "https://www.ale.am.gov.br/",
-                "transparencia": "https://transparencia.ale.am.gov.br/"
+                "site": "https://www.aleam.gov.br/",
+                "transparencia": "https://www.aleam.gov.br/transparencia/"
             }
         },
         "Poder Judiciário": {
@@ -31,25 +31,25 @@ ORGAOS_DATA = {
         "Ministério Público": {
             "Ministério Público MPE": {
                 "site": "https://www.mpam.mp.br/",
-                "transparencia": "https://transparencia.mpam.mp.br/"
+                "transparencia": "https://www.mpam.mp.br/servicos/transparencia"
             }
         },
         "Defensoria": {
             "Defensoria DPE": {
-                "site": "https://www.defensoria.am.gov.br/",
-                "transparencia": "https://transparencia.defensoria.am.gov.br/"
+                "site": "https://defensoria.am.def.br/",
+                "transparencia": "https://transparencia.defensoria.am.def.br/"
             }
         },
         "Consórcios Públicos": {
             "Consórcio Interestadual de Desenvolvimento Sustentável da Amazônia Legal (CAL)": {
-                "site": "https://amazonialegal.info/",
+                "site": "https://www.consorcioamazonialegal.gov.br/",
                 "transparencia": ""  # Exemplo de órgão sem portal de transparência listado
             }
         },
         "Estatais": {
             "Companhia de Saneamento do Amazonas – COSAMA": {
                 "site": "https://cosama.am.gov.br/",
-                "transparencia": "https://cosama.portaldatransparencia.org/"
+                "transparencia": "https://cosama.am.gov.br/informacao/"
             },
             "Processamento de Dados Amazonas S/A – PRODAM": {
                 "site": "https://www.prodam.am.gov.br/",
@@ -57,7 +57,7 @@ ORGAOS_DATA = {
             },
             "Companhia de Gás do Amazonas – CIGÁS": {
                 "site": "https://www.cigas-am.com.br/",
-                "transparencia": "https://www.cigas-am.com.br/institucional/transparencia/"
+                "transparencia": "https://www.cigas-am.com.br/acesso-a-informacao-lai"
             }
         }
     },
@@ -69,32 +69,32 @@ ORGAOS_DATA = {
                 "transparencia": "https://transparencia.manaus.am.gov.br/"
             },
             "Prefeitura de Itacoatiara": {
-                "site": "https://www.itacoatiara.am.gov.br/", 
-                "transparencia": "https://www.itacoatiara.am.gov.br/portal-transparencia/"
+                "site": "https://prefeituradeitacoatiara.com.br/", 
+                "transparencia": "https://prefeituradeitacoatiara.com.br/transparencia"
             },
             "Prefeitura de Parintins": {
                 "site": "https://parintins.am.gov.br/", 
-                "transparencia": "https://parintins.am.gov.br/portal-da-transparencia/"
+                "transparencia": "https://transparencia.parintins.am.gov.br/"
             },
             "Prefeitura de Manacapuru": {
                 "site": "https://manacapuru.am.gov.br/", 
-                "transparencia": "https://manacapuru.am.gov.br/transparencia/"
+                "transparencia": "https://transparencia.betha.cloud/#/c__jWVln4DUOYDYfhXSJnA=="
             },
             "Prefeitura de Coari": {
                 "site": "https://coari.am.gov.br/", 
-                "transparencia": "https://coari.am.gov.br/transparencia-2/"
+                "transparencia": "https://transparencia.coari.am.gov.br/"
             },
             "Prefeitura de Tefé": {
                 "site": "https://tefe.am.gov.br/", 
-                "transparencia": "https://tefe.am.gov.br/portal-da-transparencia/"
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/tefe"
             },
             "Prefeitura de Maués": {
                 "site": "https://www.maues.am.gov.br/", 
-                "transparencia": "https://www.maues.am.gov.br/portal-da-transparencia/"
+                "transparencia": "http://sistemasweb.inf.br:8060/transparencia/"
             },
             "Prefeitura de Eirunepé": {
-                "site": "https://eirunepe.am.gov.br/", 
-                "transparencia": "https://eirunepe.am.gov.br/portal-transparencia/"
+                "site": "Não informado", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/eirunepe"
             },
             "Prefeitura de Humaitá": {
                 "site": "https://humaita.am.gov.br/", 
@@ -102,11 +102,11 @@ ORGAOS_DATA = {
             },
             "Prefeitura de Lábrea": {
                 "site": "https://labrea.am.gov.br/", 
-                "transparencia": "https://labrea.am.gov.br/portal-transparencia/"
+                "transparencia": "http://transparencia-labrea.org/"
             },
             "Prefeitura de Manicoré": {
                 "site": "https://manicore.am.gov.br/", 
-                "transparencia": "https://manicore.am.gov.br/portal-transparencia/"
+                "transparencia": "https://manicore.am.gov.br/portal-da-transparencia/"
             },
             "Prefeitura de Borba": {
                 "site": "https://borba.am.gov.br/", 
@@ -114,7 +114,7 @@ ORGAOS_DATA = {
             },
             "Prefeitura de Presidente Figueiredo": {
                 "site": "https://presidentefigueiredo.am.gov.br/", 
-                "transparencia": "https://presidentefigueiredo.am.gov.br/portal-transparencia/"
+                "transparencia": "https://www.presidentefigueiredo.am.gov.br/transparencia/"
             },
             "Prefeitura de Carauari": {
                 "site": "https://carauari.am.gov.br/", 
@@ -122,35 +122,35 @@ ORGAOS_DATA = {
             },
             "Prefeitura de Benjamin Constant": {
                 "site": "https://benjaminconstant.am.gov.br/", 
-                "transparencia": "https://benjaminconstant.am.gov.br/portal-transparencia/"
+                "transparencia": "https://benjaminconstant.am.gov.br/transparencia/?transparencia.html"
             },
             "Prefeitura de Boca do Acre": {
                 "site": "https://bocadoacre.am.gov.br/", 
-                "transparencia": "https://bocadoacre.am.gov.br/portal-transparencia/"
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/bocadoacre"
             },
             "Prefeitura de Careiro": {
-                "site": "https://careiro.am.gov.br/", 
-                "transparencia": "https://careiro.am.gov.br/portal-transparencia/"
+                "site": "Em Manutencão https://careiro.am.gov.br/", 
+                "transparencia": "Em Manutencão https://www.careiro.am.gov.br/portal-transparencia/"
             },
             "Prefeitura de Iranduba": {
-                "site": "https://iranduba.am.gov.br/", 
-                "transparencia": "https://iranduba.am.gov.br/portal-transparencia/"
+                "site": "https://www.iranduba.am.gov.br/", 
+                "transparencia": "https://transparencia.betha.cloud/#/yVVW6OAco0wQSzK_WdkkFg=="
             },
             "Prefeitura de Rio Preto da Eva": {
                 "site": "https://riopretodaeva.am.gov.br/", 
-                "transparencia": "https://riopretodaeva.am.gov.br/transparencia/"
+                "transparencia": "https://riopretodaeva.am.gov.br/portal-da-transparencia/"
             },
-                        "Prefeitura de Autazes": {
+            "Prefeitura de Autazes": {
                 "site": "https://autazes.am.gov.br/", 
-                "transparencia": "https://autazes.am.gov.br/portal-transparencia/"
+                "transparencia": "https://www.perseusdata2.com/pmautazes/"
             },
             "Prefeitura de Barcelos": {
-                "site": "https://barcelos.am.gov.br/", 
-                "transparencia": "https://barcelos.am.gov.br/portal-transparencia/"
+                "site": "Index of https://barcelos.am.gov.br/", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/barcelos"
             },
             "Prefeitura de Fonte Boa": {
-                "site": "https://fonteboa.am.gov.br/", 
-                "transparencia": "https://fonteboa.am.gov.br/portal-transparencia/"
+                "site": "Index of https://fonteboa.am.gov.br/", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/fonte-boa"
             },
             "Prefeitura de Guajará": {
                 "site": "https://guajara.am.gov.br/", 
@@ -162,123 +162,123 @@ ORGAOS_DATA = {
             },
             "Prefeitura de Novo Airão": {
                 "site": "https://novoairao.am.gov.br/", 
-                "transparencia": "https://novoairao.am.gov.br/portal-transparencia/"
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/novo-airao"
             },
             "Prefeitura de Santo Antônio do Içá": {
-                "site": "https://santoantoniodoica.am.gov.br/", 
-                "transparencia": "https://santoantoniodoica.am.gov.br/portal-transparencia/"
+                "site": "Index of https://santoantoniodoica.am.gov.br/", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/santo-antonio-do-ica"
             },
             "Prefeitura de São Gabriel da Cachoeira": {
-                "site": "https://saogabriel.am.gov.br/", 
-                "transparencia": "https://saogabriel.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/sao-gabriel-da-cachoeira"
             },
             "Prefeitura de Tabatinga": {
                 "site": "https://tabatinga.am.gov.br/", 
-                "transparencia": "https://tabatinga.am.gov.br/portal-transparencia/"
+                "transparencia": "https://www.tabatinga.am.gov.br/transparencia/"
             },
             "Prefeitura de Urucará": {
                 "site": "https://urucara.am.gov.br/", 
-                "transparencia": "https://urucara.am.gov.br/portal-transparencia/"
+                "transparencia": "https://urucara.am.gov.br/transparencia/"
             },
             "Prefeitura de Atalaia do Norte": {
                 "site": "https://atalaiadonorte.am.gov.br/", 
-                "transparencia": "https://atalaiadonorte.am.gov.br/portal-transparencia/"
+                "transparencia": "https://atalaiadonorte.am.gov.br/transparencia/"
             },
             "Prefeitura de Barreirinha": {
                 "site": "https://barreirinha.am.gov.br/", 
-                "transparencia": "https://barreirinha.am.gov.br/portal-transparencia/"
+                "transparencia": "https://barreirinha.am.gov.br/transparencia/"
             },
             "Prefeitura de Boa Vista do Ramos": {
-                "site": "https://boavistadoramos.am.gov.br/", 
-                "transparencia": "https://boavistadoramos.am.gov.br/portal-transparencia/"
+                "site": "não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/boavistadoramos"
             },
             "Prefeitura de Caapiranga": {
                 "site": "https://caapiranga.am.gov.br/", 
-                "transparencia": "https://caapiranga.am.gov.br/portal-transparencia/"
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/caapiranga"
             },
             "Prefeitura de Canutama": {
-                "site": "https://canutama.am.gov.br/", 
-                "transparencia": "https://canutama.am.gov.br/portal-transparencia/"
+                "site": "Index of https://canutama.am.gov.br/", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/canutama"
             },
             "Prefeitura de Careiro da Várzea": {
-                "site": "https://careirodavazea.am.gov.br/", 
-                "transparencia": "https://careirodavazea.am.gov.br/portal-transparencia/"
+                "site": "https://careirodavarzea.am.gov.br/", 
+                "transparencia": "https://careirodavarzea.am.gov.br/transparencia/"
             },
             "Prefeitura de Codajás": {
                 "site": "https://codajas.am.gov.br/", 
-                "transparencia": "https://codajas.am.gov.br/portal-transparencia/"
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/codajas"
             },
             "Prefeitura de Envira": {
-                "site": "https://envira.am.gov.br/", 
-                "transparencia": "https://envira.am.gov.br/portal-transparencia/"
+                "site": "https://envira.am.gov.br/ Site em Manutenção", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/envira"
             },
             "Prefeitura de Ipixuna": {
                 "site": "https://ipixuna.am.gov.br/", 
-                "transparencia": "https://ipixuna.am.gov.br/portal-transparencia/"
+                "transparencia": "https://portaldatransparencia.gov.br/localidades/1301803-ipixuna"
             },
             "Prefeitura de Itamarati": {
-                "site": "https://itamarati.am.gov.br/", 
-                "transparencia": "https://itamarati.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/itamarati"
             },
             "Prefeitura de Japurá": {
-                "site": "https://japura.am.gov.br/", 
-                "transparencia": "https://japura.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/japura"
             },
             "Prefeitura de Maraã": {
                 "site": "https://maraa.am.gov.br/", 
-                "transparencia": "https://maraa.am.gov.br/portal-transparencia/"
+                "transparencia": "https://www.maraa.am.gov.br/transparencia/"
             },
             "Prefeitura de Nhamundá": {
                 "site": "https://nhamunda.am.gov.br/", 
-                "transparencia": "https://nhamunda.am.gov.br/portal-transparencia/"
+                "transparencia": "https://nhamunda.am.gov.br/portal-da-transparencia/"
             },
             "Prefeitura de Nova Olinda do Norte": {
                 "site": "https://novaolindadonorte.am.gov.br/", 
-                "transparencia": "https://novaolindadonorte.am.gov.br/portal-transparencia/"
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/nova-olinda-do-norte"
             },
             "Prefeitura de Pauini": {
                 "site": "https://pauini.am.gov.br/", 
-                "transparencia": "https://pauini.am.gov.br/portal-transparencia/"
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/pauini"
             },
             "Prefeitura de São Paulo de Olivença": {
-                "site": "https://saopaulodeolivenca.am.gov.br/", 
-                "transparencia": "https://saopaulodeolivenca.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/sao-paulo-de-olivenca"
             },
             "Prefeitura de Silves": {
                 "site": "https://silves.am.gov.br/", 
-                "transparencia": "https://silves.am.gov.br/portal-transparencia/"
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/silves"
             },
             "Prefeitura de Tonantins": {
                 "site": "https://tonantins.am.gov.br/", 
-                "transparencia": "https://tonantins.am.gov.br/portal-transparencia/"
+                "transparencia": "https://tonantins.am.gov.br/transparencia/"
             },
             "Prefeitura de Urucurituba": {
                 "site": "https://urucurituba.am.gov.br/", 
-                "transparencia": "https://urucurituba.am.gov.br/portal-transparencia/"
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/urucurituba"
             },
             "Prefeitura de Alvarães": {
-                "site": "https://alvaraes.am.gov.br/", 
-                "transparencia": "https://alvaraes.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/alvaraes"
             },
             "Prefeitura de Amaturá": {
                 "site": "https://amatura.am.gov.br/", 
-                "transparencia": "https://amatura.am.gov.br/portal-transparencia/"
+                "transparencia": "https://amatura.am.gov.br/transparencia/"
             },
             "Prefeitura de Anamã": {
                 "site": "https://anama.am.gov.br/", 
-                "transparencia": "https://anama.am.gov.br/portal-transparencia/"
+                "transparencia": "https://anama.am.gov.br/transparencia/"
             },
             "Prefeitura de Anori": {
-                "site": "https://anori.am.gov.br/", 
-                "transparencia": "https://anori.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/anori"
             },
             "Prefeitura de Apuí": {
                 "site": "https://apui.am.gov.br/", 
-                "transparencia": "https://apui.am.gov.br/portal-transparencia/"
+                "transparencia": "https://apui.am.gov.br/portal-da-transparencia/"
             },
             "Prefeitura de Beruri": {
-                "site": "https://beruri.am.gov.br/", 
-                "transparencia": "https://beruri.am.gov.br/portal-transparencia/"
+                "site": "https://pmberuri.am.gov.br/", 
+                "transparencia": "https://pmberuri.am.gov.br/transparencia/"
             }
         },
         "Poder Legislativo": {
