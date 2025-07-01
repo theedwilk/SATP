@@ -285,219 +285,219 @@ ORGAOS_DATA = {
             # Câmaras Municipais dos Municípios do Amazonas (LISTA COMPLETA)
             "Câmara de Manaus": {
                 "site": "https://www.cmm.am.gov.br/", 
-                "transparencia": "https://transparencia.cmm.am.gov.br/"
+                "transparencia": "https://www.cmm.am.gov.br/transparencia/"
             },
             "Câmara Municipal de Itacoatiara": {
-                "site": "https://www.cmitacoatiara.am.gov.br/", 
-                "transparencia": "https://www.cmitacoatiara.am.gov.br/portal-da-transparencia/"
+                "site": "https://www.itacoatiara.am.leg.br/", 
+                "transparencia": "https://www.itacoatiara.am.leg.br/transparencia"
             },
             "Câmara Municipal de Parintins": {
-                "site": "https://camaraparintins.am.gov.br/", 
-                "transparencia": "https://camaraparintins.am.gov.br/portal-transparencia/"
+                "site": "https://www.parintins.am.leg.br/", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/parintins-camara"
             },
             "Câmara Municipal de Manacapuru": {
-                "site": "https://cmmanacapuru.am.gov.br/", 
-                "transparencia": "https://cmmanacapuru.am.gov.br/portal-transparencia/"
+                "site": "https://www.manacapuru.am.leg.br/", 
+                "transparencia": "https://www.manacapuru.am.leg.br/transparencia"
             },
             "Câmara Municipal de Coari": {
-                "site": "https://cmcoari.am.gov.br/", 
-                "transparencia": "https://cmcoari.am.gov.br/portal-transparencia/"
+                "site": "https://www.coari.am.leg.br/", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/coari-camara"
             },
             "Câmara Municipal de Tefé": {
-                "site": "https://cmtefe.am.gov.br/", 
-                "transparencia": "https://cmtefe.am.gov.br/portal-transparencia/"
+                "site": "https://www.tefe.am.leg.br/", 
+                "transparencia": "https://www.perseusdata2.com/camaratefe/"
             },
             "Câmara Municipal de Maués": {
-                "site": "https://cammaues.am.gov.br/", 
-                "transparencia": "https://cammaues.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://www.perseusdata2.com/camaramaues/"
             },
             "Câmara Municipal de Eirunepé": {
-                "site": "https://cmeirunepe.am.gov.br/", 
-                "transparencia": "https://cmeirunepe.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/eirunepe-camara"
             },
             "Câmara Municipal de Humaitá": {
-                "site": "https://cmhumaita.am.gov.br/", 
-                "transparencia": "https://cmhumaita.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://www.perseusdata2.com/camarahumaita/"
             },
             "Câmara Municipal de Lábrea": {
-                "site": "https://cmlabrea.am.gov.br/", 
-                "transparencia": "https://cmlabrea.am.gov.br/portal-transparencia/"
+                "site": "https://www.labrea.am.leg.br/", 
+                "transparencia": "https://www.labrea.am.leg.br/transparencia"
             },
             "Câmara Municipal de Manicoré": {
-                "site": "https://cmmanicore.am.gov.br/", 
-                "transparencia": "https://cmmanicore.am.gov.br/portal-transparencia/"
+                "site": "https://www.manicore.am.leg.br/", 
+                "transparencia": "https://www.manicore.am.leg.br/transparencia"
             },
             "Câmara Municipal de Borba": {
                 "site": "https://cmborba.am.gov.br/", 
-                "transparencia": "https://cmborba.am.gov.br/portal-transparencia/"
+                "transparencia": "https://www.portalcr2.com.br/entidade/cm-borba"
             },
             "Câmara Municipal de Presidente Figueiredo": {
-                "site": "https://cmpresidentefigueiredo.am.gov.br/", 
-                "transparencia": "https://cmpresidentefigueiredo.am.gov.br/portal-transparencia/"
+                "site": "https://cmpfg.am.gov.br/", 
+                "transparencia": "https://cmpfg.am.gov.br/portal-da-transparencia/"
             },
             "Câmara Municipal de Carauari": {
-                "site": "https://cmcarauari.am.gov.br/", 
-                "transparencia": "https://cmcarauari.am.gov.br/portal-transparencia/"
+                "site": "https://camaradecarauari.am.gov.br/", 
+                "transparencia": "https://camaradecarauari.am.gov.br/transparencia/"
             },
             "Câmara Municipal de Benjamin Constant": {
-                "site": "https://cmbenjaminconstant.am.gov.br/", 
-                "transparencia": "https://cmbenjaminconstant.am.gov.br/portal-transparencia/"
+                "site": "https://camarabenjaminconstant.am.gov.br/", 
+                "transparencia": "https://camarabenjaminconstant.am.gov.br/transparencia/"
             },
             "Câmara Municipal de Boca do Acre": {
-                "site": "https://cmbocadoacre.am.gov.br/", 
-                "transparencia": "https://cmbocadoacre.am.gov.br/portal-transparencia/"
+                "site": "https://www.bocadoacre.am.leg.br/", 
+                "transparencia": "https://www.bocadoacre.am.leg.br/transparencia/portal-da-transparencia"
             },
             "Câmara Municipal de Careiro": {
-                "site": "https://cmcareiro.am.gov.br/", 
-                "transparencia": "https://cmcareiro.am.gov.br/portal-transparencia/"
+                "site": "https://www.careiro.am.leg.br/", 
+                "transparencia": "https://www.careiro.am.leg.br/transparencia"
             },
             "Câmara Municipal de Iranduba": {
-                "site": "https://cmiranduba.am.gov.br/", 
-                "transparencia": "https://cmiranduba.am.gov.br/portal-transparencia/"
+                "site": "https://www.iranduba.am.leg.br/", 
+                "transparencia": "https://transparencia.betha.cloud/#/lK0qAU9q-AOemevhYosBnw=="
             },
             "Câmara Municipal de Rio Preto da Eva": {
-                "site": "https://cmriopretodaeva.am.gov.br/", 
-                "transparencia": "https://cmriopretodaeva.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/riopretodaeva-camara"
             },
             "Câmara Municipal de Autazes": {
-                "site": "https://cmautazes.am.gov.br/", 
-                "transparencia": "https://cmautazes.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://www.perseusdata2.com/camaraautazes/"
             },
             "Câmara Municipal de Barcelos": {
-                "site": "https://cmbarcelos.am.gov.br/", 
-                "transparencia": "https://cmbarcelos.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/barcelos-camara"
             },
             "Câmara Municipal de Fonte Boa": {
-                "site": "https://cmfonteboa.am.gov.br/", 
-                "transparencia": "https://cmfonteboa.am.gov.br/portal-transparencia/"
+                "site": "https://camarafonteboa.am.gov.br/", 
+                "transparencia": "https://camarafonteboa.am.gov.br/transparencia/"
             },
             "Câmara Municipal de Guajará": {
-                "site": "https://cmguajara.am.gov.br/", 
-                "transparencia": "https://cmguajara.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/guajara-camara"
             },
             "Câmara Municipal de Jutaí": {
-                "site": "https://cmjutai.am.gov.br/", 
-                "transparencia": "https://cmjutai.am.gov.br/portal-transparencia/"
+                "site": "https://camarajutai.am.gov.br/", 
+                "transparencia": "https://camarajutai.am.gov.br/transparencia/"
             },
             "Câmara Municipal de Novo Airão": {
-                "site": "https://cmnovoairao.am.gov.br/", 
-                "transparencia": "https://cmnovoairao.am.gov.br/portal-transparencia/"
+                "site": "https://www.novoairao.am.leg.br/", 
+                "transparencia": "https://www.novoairao.am.leg.br/transparencia"
             },
             "Câmara Municipal de Santo Antônio do Içá": {
-                "site": "https://cmsantoantoniodoica.am.gov.br/", 
-                "transparencia": "https://cmsantoantoniodoica.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/santo-antonio-do-ica-camara"
             },
             "Câmara Municipal de São Gabriel da Cachoeira": {
-                "site": "https://cmsaogabriel.am.gov.br/", 
-                "transparencia": "https://cmsaogabriel.am.gov.br/portal-transparencia/"
+                "site": "https://www.saogabrieldacachoeira.am.leg.br/", 
+                "transparencia": "https://www.saogabrieldacachoeira.am.leg.br/transparencia"
             },
             "Câmara Municipal de Tabatinga": {
-                "site": "https://cmtabatinga.am.gov.br/", 
-                "transparencia": "https://cmtabatinga.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/tabatinga-camara"
             },
             "Câmara Municipal de Urucará": {
-                "site": "https://cmurucara.am.gov.br/", 
-                "transparencia": "https://cmurucara.am.gov.br/portal-transparencia/"
+                "site": "https://www.urucara.am.leg.br/", 
+                "transparencia": "https://www.urucara.am.leg.br/transparencia"
             },
             "Câmara Municipal de Atalaia do Norte": {
-                "site": "https://cmatalaiadonorte.am.gov.br/", 
-                "transparencia": "https://cmatalaiadonorte.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/atalaiadonorte-camara"
             },
             "Câmara Municipal de Barreirinha": {
-                "site": "https://cmbarreirinha.am.gov.br/", 
-                "transparencia": "https://cmbarreirinha.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://www.perseusdata2.com/camarabarreirinha/"
             },
             "Câmara Municipal de Boa Vista do Ramos": {
-                "site": "https://cmboavistadoramos.am.gov.br/", 
-                "transparencia": "https://cmboavistadoramos.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/boavistadoramos-camara"
             },
             "Câmara Municipal de Caapiranga": {
-                "site": "https://cmcaapiranga.am.gov.br/", 
-                "transparencia": "https://cmcaapiranga.am.gov.br/portal-transparencia/"
+                "site": "https://www.caapiranga.am.leg.br/", 
+                "transparencia": "https://www.caapiranga.am.leg.br/transparencia"
             },
             "Câmara Municipal de Canutama": {
-                "site": "https://cmcanutama.am.gov.br/", 
-                "transparencia": "https://cmcanutama.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/canutama-camara"
             },
             "Câmara Municipal de Careiro da Várzea": {
-                "site": "https://cmcareirodavazea.am.gov.br/", 
-                "transparencia": "https://cmcareirodavazea.am.gov.br/portal-transparencia/"
+                "site": "https://camaracareirodavarzea.am.gov.br/", 
+                "transparencia": "https://camaracareirodavarzea.am.gov.br/"
             },
             "Câmara Municipal de Codajás": {
-                "site": "https://cmcodajas.am.gov.br/", 
-                "transparencia": "https://cmcodajas.am.gov.br/portal-transparencia/"
+                "site": "https://sapl.codajas.am.leg.br/", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/codajas-camara"
             },
             "Câmara Municipal de Envira": {
-                "site": "https://cmenvira.am.gov.br/", 
-                "transparencia": "https://cmenvira.am.gov.br/portal-transparencia/"
+                "site": "https://www.envira.am.leg.br/", 
+                "transparencia": "https://www.envira.am.leg.br/transparencia"
             },
             "Câmara Municipal de Ipixuna": {
-                "site": "https://cmipixuna.am.gov.br/", 
-                "transparencia": "https://cmipixuna.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/ipixuna-camara"
             },
             "Câmara Municipal de Itamarati": {
-                "site": "https://cmitamarati.am.gov.br/", 
-                "transparencia": "https://cmitamarati.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/itamarati-camara"
             },
             "Câmara Municipal de Japurá": {
-                "site": "https://cmjapura.am.gov.br/", 
-                "transparencia": "https://cmjapura.am.gov.br/portal-transparencia/"
+                "site": "https://camarajapura.am.gov.br/", 
+                "transparencia": "https://camarajapura.am.gov.br/transparencia/"
             },
             "Câmara Municipal de Maraã": {
-                "site": "https://cmmaraa.am.gov.br/", 
-                "transparencia": "https://cmmaraa.am.gov.br/portal-transparencia/"
+                "site": "https://camaramaraa.am.gov.br/", 
+                "transparencia": "https://camaramaraa.am.gov.br/transparencia/"
             },
             "Câmara Municipal de Nhamundá": {
-                "site": "https://cmnhamunda.am.gov.br/", 
-                "transparencia": "https://cmnhamunda.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "Não informado ou indisponível"
             },
             "Câmara Municipal de Nova Olinda do Norte": {
-                "site": "https://cmnovaolindadonorte.am.gov.br/", 
-                "transparencia": "https://cmnovaolindadonorte.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/nova-olinda-do-norte-camara"
             },
             "Câmara Municipal de Pauini": {
-                "site": "https://cmpauini.am.gov.br/", 
-                "transparencia": "https://cmpauini.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://pauinicm.transparencia-am.com.br/"
             },
             "Câmara Municipal de São Paulo de Olivença": {
-                "site": "https://cmsaopaulodeolivenca.am.gov.br/", 
-                "transparencia": "https://cmsaopaulodeolivenca.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/saopaulodeolivenca-camara"
             },
             "Câmara Municipal de Silves": {
-                "site": "https://cmsilves.am.gov.br/", 
-                "transparencia": "https://cmsilves.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/silves-camara"
             },
             "Câmara Municipal de Tonantins": {
-                "site": "https://cmtonantins.am.gov.br/", 
-                "transparencia": "https://cmtonantins.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://camaratonantins.transparencia-am.com.br/"
             },
             "Câmara Municipal de Urucurituba": {
-                "site": "https://cmurucurituba.am.gov.br/", 
-                "transparencia": "https://cmurucurituba.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/urucurituba-camara"
             },
             "Câmara Municipal de Alvarães": {
-                "site": "https://cmalvaraes.am.gov.br/", 
-                "transparencia": "https://cmalvaraes.am.gov.br/portal-transparencia/"
+                "site": "https://www.alvaraes.am.leg.br/", 
+                "transparencia": "https://www.alvaraes.am.leg.br/transparencia"
             },
             "Câmara Municipal de Amaturá": {
-                "site": "https://cmamatura.am.gov.br/", 
-                "transparencia": "https://cmamatura.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/amatura-camara"
             },
             "Câmara Municipal de Anamã": {
-                "site": "https://cmanama.am.gov.br/", 
-                "transparencia": "https://cmanama.am.gov.br/portal-transparencia/"
+                "site": "Não informado ou indisponível", 
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/anama-camara"
             },
             "Câmara Municipal de Anori": {
-                "site": "https://cmanori.am.gov.br/", 
-                "transparencia": "https://cmanori.am.gov.br/portal-transparencia/"
+                "site": "https://camaraanori.am.gov.br/", 
+                "transparencia": "https://camaraanori.am.gov.br/transparencia/"
             },
             "Câmara Municipal de Apuí": {
-                "site": "https://cmapui.am.gov.br/", 
-                "transparencia": "https://cmapui.am.gov.br/portal-transparencia/"
+                "site": "https://www.apui.am.leg.br/", 
+                "transparencia": "https://www.apui.am.leg.br/transparencia"
             },
             "Câmara Municipal de Beruri": {
-                "site": "https://cmberuri.am.gov.br/", 
-                "transparencia": "https://cmberuri.am.gov.br/portal-transparencia/"
+                "site": "https://www.beruri.am.leg.br/", 
+                "transparencia": "https://www.beruri.am.leg.br/transparencia"
             }
         }
     }
