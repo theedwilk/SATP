@@ -1,17 +1,25 @@
-from fastapi import FastAPI, HTTPException
+# ================================
+# IMPORTS PRINCIPAIS
+# ================================
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import Optional, Dict, List
 import time
-from datetime import datetime
+import json
+import uuid
 import asyncio
 import aiohttp
+from datetime import datetime
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import re
 from dataclasses import dataclass
 
-# Imports dos seus módulos existentes
+# ================================
+# IMPORTS DOS MÓDULOS ESPECÍFICOS
+# ================================
 from .services.orgaos_data import ORGAOS_DATA
 from .services.criterios_comum import CRITERIOS_TRANSPARENCIA
 from .services.criterios_comum_exceto_estatais_independentes import CRITERIOS_COMUM_EXCETO_ESTATAIS_INDEPENDENTES
@@ -27,7 +35,10 @@ from .services.criterios_consorcios_publicos import CRITERIOS_CONSORCIOS_PUBLICO
 from .services.criterios_estatais import CRITERIOS_ESTATAIS
 from .services.criterios_estatais_independentes import CRITERIOS_ESTATAIS_INDEPENDENTES
 
-app = FastAPI(title="PNTP API", version="1.0.0")
+# ================================
+# CONFIGURAÇÃO DO FASTAPI
+# ================================
+app = FastAPI(title="PNTP API", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -37,7 +48,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Schemas para a API
+# ================================
+# SCHEMAS PARA A API
+# ================================
 class AuditoriaRequest(BaseModel):
     transparencia_url: str
     orgao_nome: str
@@ -45,6 +58,9 @@ class AuditoriaRequest(BaseModel):
     esfera: str
     poder: str
 
+# ================================
+# DATACLASSES
+# ================================
 @dataclass
 class CriterioAuditoria:
     dimensao: str
@@ -71,12 +87,53 @@ class ResultadoCriterio:
     timestamp: str
     observacoes: str
 
+# ================================
+# GERENCIADOR DE PROGRESSO
+# ================================
+class ProgressManager:
+    def __init__(self):
+        self.progress_data: Dict[str, Dict] = {}
+
+    def create_session(self) -> str:
+        session_id = str(uuid.uuid4())
+        self.progress_data[session_id] = {
+            "current": 0,
+            "total": 0,
+            "status": "Iniciando...",
+            "detail": "",
+            "criterio_atual": None,
+            "completed": False
+        }
+        return session_id
+
+    async def update_progress(self, session_id: str, current: int, total: int, status: str, detail: str, criterio_atual=None):
+        if session_id in self.progress_data:
+            self.progress_data[session_id].update({
+                "current": current,
+                "total": total,
+                "status": status,
+                "detail": detail,
+                "criterio_atual": criterio_atual,
+                "percentage": int((current / total) * 100) if total > 0 else 0
+            })
+
+    def get_progress(self, session_id: str) -> Dict:
+        return self.progress_data.get(session_id, {})
+
+    def mark_completed(self, session_id: str, resultado: Dict):
+        if session_id in self.progress_data:
+            self.progress_data[session_id]["completed"] = True
+            self.progress_data[session_id]["resultado"] = resultado
+
+# Instância global
+progress_manager = ProgressManager()
+
 # Suas funções existentes adaptadas
 def obter_criterios_por_poder(poder_selecionado, esfera_selecionada=""):
     """Obtém os critérios aplicáveis baseado no poder selecionado"""
     criterios_aplicaveis = {}
     criterios_aplicaveis.update(CRITERIOS_TRANSPARENCIA)
-    
+
     poder_normalizado = poder_selecionado.lower().replace(" ", "_")
     if "executivo" in poder_normalizado:
         criterios_aplicaveis.update(CRITERIOS_COMUM_EXCETO_ESTATAIS_INDEPENDENTES)
@@ -192,10 +249,10 @@ class AuditoriaTransparenciaCriterios:
     async def _verificar_criterio_async(self, session: aiohttp.ClientSession, base_url: str, criterio: CriterioAuditoria, main_site_url: Optional[str] = None) -> ResultadoCriterio:
         if criterio.id_criterio == "1.1":
             return await self._verificar_criterio_site_oficial_async(session, base_url, criterio, main_site_url)
-        
+
         url_to_check = base_url
         soup = await self._fetch_page_async(session, url_to_check)
-        
+
         disponivel = False
         link_evidencia = ""
         texto_evidencia = ""
@@ -240,7 +297,7 @@ class AuditoriaTransparenciaCriterios:
 
     async def _verificar_criterio_site_oficial_async(self, session: aiohttp.ClientSession, base_url: str, criterio: CriterioAuditoria, main_site_url: Optional[str] = None) -> ResultadoCriterio:
         url_to_check = main_site_url if main_site_url else base_url
-        
+
         try:
             async with session.head(url_to_check, timeout=self.timeout) as response:
                 is_online = response.status == 200
@@ -280,19 +337,49 @@ class AuditoriaTransparenciaCriterios:
             observacoes=f"Site online: {status_message}"
         )
 
-    async def auditoria_completa_async(self, transparencia_url: str, orgao_nome: str, site_url: Optional[str] = None) -> Dict:
+    async def auditoria_completa_async(self, transparencia_url: str, orgao_nome: str, site_url: Optional[str] = None, progress_callback=None) -> Dict:
         start_time = time.time()
         resultados_criterios = []
         links_evidencia = []
         criterios_conformes = 0
         total_criterios = len(self.criterios)
-        
-        criterios_ordenados = sorted(self.criterios.values(), key=lambda c: c.id_criterio)
+
+        # 🎯 ORDENAÇÃO CORRETA POR ID NUMÉRICO
+        def ordenar_por_id_numerico(criterio):
+            """Ordena critérios por número (1.1, 1.2, 1.3, 2.1, 2.2, 3.1, etc.)"""
+            try:
+                partes = criterio.id_criterio.split('.')
+                return [int(p) for p in partes]
+            except:
+                return [999, 999]
+
+        criterios_ordenados = sorted(self.criterios.values(), key=ordenar_por_id_numerico)
+
+        # Callback inicial
+        if progress_callback:
+            await progress_callback(0, total_criterios, "🚀 Iniciando auditoria...", "Preparando análise sequencial dos critérios")
 
         async with aiohttp.ClientSession() as session:
             for i, criterio in enumerate(criterios_ordenados):
+                # 🔍 CALLBACK DE PROGRESSO EM TEMPO REAL
+                if progress_callback:
+                    await progress_callback(
+                        i,
+                        total_criterios,
+                        f"🔍 Analisando critério {criterio.id_criterio}",
+                        f"📋 {criterio.dimensao}: {criterio.criterio[:60]}...",
+                        {
+                            "id": criterio.id_criterio,
+                            "dimensao": criterio.dimensao,
+                            "criterio": criterio.criterio,
+                            "classificacao": criterio.classificacao
+                        }
+                    )
+
                 url_para_verificar = transparencia_url
                 if criterio.id_criterio == "1.1":
+                    url_para_verificar = site_url
+                elif criterio.id_criterio == "1.3":  # Também pode usar site_url para critério 1.3
                     url_para_verificar = site_url
 
                 resultado = await self._verificar_criterio_async(session, url_para_verificar, criterio, site_url)
@@ -320,6 +407,25 @@ class AuditoriaTransparenciaCriterios:
                         "texto_evidencia": resultado.texto_evidencia
                     })
 
+                # ✅ CALLBACK APÓS CADA CRITÉRIO
+                if progress_callback:
+                    status_emoji = "✅" if resultado.disponivel else "❌"
+                    await progress_callback(
+                        i + 1,
+                        total_criterios,
+                        f"{status_emoji} Critério {criterio.id_criterio} concluído",
+                        f"📊 Conformes: {criterios_conformes}/{i+1} | ⚙️ {resultado.metodo_encontrado[:30]}..."
+                    )
+
+        # 🎉 CALLBACK FINAL
+        if progress_callback:
+            await progress_callback(
+                total_criterios,
+                total_criterios,
+                "🎉 Auditoria concluída!",
+                f"📈 Análise finalizada: {criterios_conformes}/{total_criterios} critérios conformes ({(criterios_conformes/total_criterios)*100:.1f}% de conformidade)"
+            )
+
         end_time = time.time()
         tempo_auditoria = end_time - start_time
         percentual_geral = (criterios_conformes / total_criterios) * 100 if total_criterios > 0 else 0
@@ -334,14 +440,41 @@ class AuditoriaTransparenciaCriterios:
                 "total_criterios": total_criterios,
                 "percentual_geral": percentual_geral
             },
-            "criterios_verificados": resultados_criterios,
+            "criterios_verificados": resultados_criterios,  # ← Já ordenados!
             "links_evidencia": links_evidencia
         }
+
+# ================================
+# FUNÇÃO DE EXECUÇÃO EM BACKGROUND
+# ================================
+async def executar_auditoria_background(session_id: str, request: AuditoriaRequest):
+    """Executa auditoria em background com callback de progresso"""
+    try:
+        criterios_poder = obter_criterios_por_poder(request.poder, request.esfera)
+        criterios_auditoria = converter_criterios_para_auditoria(criterios_poder)
+        auditor = AuditoriaTransparenciaCriterios(criterios_auditoria)
+
+        # Callback que atualiza o progresso
+        async def callback(current, total, status, detail, criterio_atual=None):
+            await progress_manager.update_progress(session_id, current, total, status, detail, criterio_atual)
+
+        resultado = await auditor.auditoria_completa_async(
+            request.transparencia_url,
+            request.orgao_nome,
+            request.site_url,
+            progress_callback=callback
+        )
+
+        # Marcar como concluído
+        progress_manager.mark_completed(session_id, resultado)
+
+    except Exception as e:
+        await progress_manager.update_progress(session_id, 0, 1, f"❌ Erro: {str(e)}", "Auditoria falhou")
 
 # Endpoints da API
 @app.get("/")
 async def root():
-    return {"message": "PNTP API funcionando", "version": "1.0.0"}
+    return {"message": "PNTP API funcionando", "version": "2.0.0"}
 
 @app.get("/api/orgaos")
 async def get_orgaos():
@@ -352,19 +485,19 @@ async def iniciar_auditoria(request: AuditoriaRequest):
     try:
         criterios_poder = obter_criterios_por_poder(request.poder, request.esfera)
         criterios_auditoria = converter_criterios_para_auditoria(criterios_poder)
-        
+
         auditor = AuditoriaTransparenciaCriterios(criterios_auditoria)
-        
+
         resultado = await auditor.auditoria_completa_async(
             request.transparencia_url,
             request.orgao_nome,
             request.site_url
         )
-        
+
         return {
             "status": "completed",
             "resultado": resultado
         }
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro na auditoria: {str(e)}")
