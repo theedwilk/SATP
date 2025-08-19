@@ -1,3 +1,4 @@
+# app/main.py
 # ================================
 # IMPORTS PRINCIPAIS
 # ================================
@@ -18,7 +19,7 @@ import re
 from dataclasses import dataclass
 
 # ================================
-# IMPORTS DOS MÓDULOS ESPECÍFICOS
+# IMPORTS DOS MÓDULOS ESPECÍFICOS - CORRIGIDOS
 # ================================
 from .services.orgaos_data import ORGAOS_DATA
 from .services.criterios_comum import CRITERIOS_TRANSPARENCIA
@@ -36,10 +37,14 @@ from .services.criterios_estatais import CRITERIOS_ESTATAIS
 from .services.criterios_estatais_independentes import CRITERIOS_ESTATAIS_INDEPENDENTES
 
 # ================================
+# IMPORT DO MAPA - ADICIONE ESTA LINHA
+# ================================
+from .maps_api import router as maps_router
+
+# ================================
 # CONFIGURAÇÃO DO FASTAPI
 # ================================
 app = FastAPI(title="PNTP API", version="2.0.0")
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "http://localhost:3001"],
@@ -47,6 +52,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ================================
+# INCLUIR ROTAS DO MAPA - ADICIONE ESTA LINHA
+# ================================
+app.include_router(maps_router)
 
 # ================================
 # SCHEMAS PARA A API
@@ -472,6 +482,7 @@ async def executar_auditoria_background(session_id: str, request: AuditoriaReque
         await progress_manager.update_progress(session_id, 0, 1, f"❌ Erro: {str(e)}", "Auditoria falhou")
 
 # Endpoints da API
+# Seus endpoints existentes continuam aqui
 @app.get("/")
 async def root():
     return {"message": "PNTP API funcionando", "version": "2.0.0"}
@@ -485,19 +496,15 @@ async def iniciar_auditoria(request: AuditoriaRequest):
     try:
         criterios_poder = obter_criterios_por_poder(request.poder, request.esfera)
         criterios_auditoria = converter_criterios_para_auditoria(criterios_poder)
-
         auditor = AuditoriaTransparenciaCriterios(criterios_auditoria)
-
         resultado = await auditor.auditoria_completa_async(
             request.transparencia_url,
             request.orgao_nome,
             request.site_url
         )
-
         return {
             "status": "completed",
             "resultado": resultado
         }
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro na auditoria: {str(e)}")

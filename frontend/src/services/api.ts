@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
 
 export interface AuditoriaRequest {
   transparencia_url: string;
@@ -44,9 +44,32 @@ export interface AuditoriaResponse {
 class ApiService {
   async obterOrgaos(): Promise<any> {
     try {
-      const response = await fetch(`${API_BASE_URL}/orgaos`);
+      // Usar o endpoint que funciona
+      const response = await fetch(`http://127.0.0.1:8000/api/orgaos-mapa`);
       if (!response.ok) throw new Error('Falha ao obter órgãos');
-      return await response.json();
+      
+      const orgaosList = await response.json();
+      
+      // Converter array de órgãos para o formato esperado pelo SAPT
+      const orgaosData: any = {};
+      
+      orgaosList.forEach((orgao: any) => {
+        const { esfera, poder, nome, site_url, transparencia_url } = orgao;
+        
+        if (!orgaosData[esfera]) {
+          orgaosData[esfera] = {};
+        }
+        if (!orgaosData[esfera][poder]) {
+          orgaosData[esfera][poder] = {};
+        }
+        
+        orgaosData[esfera][poder][nome] = {
+          site: site_url,
+          transparencia: transparencia_url
+        };
+      });
+      
+      return orgaosData;
     } catch (error) {
       console.error('Erro ao obter órgãos:', error);
       throw error;
