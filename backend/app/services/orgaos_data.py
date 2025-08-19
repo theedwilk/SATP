@@ -8,11 +8,11 @@ ORGAOS_DATA = {
             "Governo do Estado do Amazonas": {
                 "site": "https://www.amazonas.am.gov.br/",
                 "transparencia": "https://www.transparencia.am.gov.br/",
-                "endereco": "Avenida Brasil, 3925 - Compensa, Manaus - AM",
+                "endereco": "Avenida Brasil, 513 - Compensa, Manaus - AM",
                 "cep": "69036-110",
                 "coordenadas": {
-                    "latitude": -3.1095,
-                    "longitude": -60.0733
+                    "latitude": -3.0921831,
+                    "longitude": -60.0629171
                 }
             }
         },
@@ -23,8 +23,8 @@ ORGAOS_DATA = {
                 "endereco": "Avenida Mário Ypiranga Monteiro, 3950 - Parque 10 de Novembro, Manaus - AM",
                 "cep": "69057-002",
                 "coordenadas": {
-                    "latitude": -3.0861,
-                    "longitude": -60.0584
+                    "latitude": -3.0836085,
+                    "longitude": -60.0240967
                 }
             }
         },
@@ -35,8 +35,8 @@ ORGAOS_DATA = {
                 "endereco": "Avenida André Araújo, s/n - Aleixo, Manaus - AM",
                 "cep": "69060-000",
                 "coordenadas": {
-                    "latitude": -3.1118,
-                    "longitude": -60.0076
+                    "latitude": -3.0947793,
+                    "longitude": -60.0097986
                 }
             }
         },
@@ -47,8 +47,8 @@ ORGAOS_DATA = {
                 "endereco": "Avenida Efigênio Salles, 1155 - Aleixo, Manaus - AM",
                 "cep": "69050-020",
                 "coordenadas": {
-                    "latitude": -3.0975,
-                    "longitude": -60.0163
+                    "latitude": -3.0876544,
+                    "longitude": -60.0079625
                 }
             }
         },
@@ -59,8 +59,8 @@ ORGAOS_DATA = {
                 "endereco": "Avenida Coronel Teixeira, 7995 - Nova Esperança, Manaus - AM",
                 "cep": "69037-000",
                 "coordenadas": {
-                    "latitude": -3.0950,
-                    "longitude": -60.0725
+                    "latitude": -3.0907865,
+                    "longitude": -60.0873828
                 }
             }
         },
@@ -71,8 +71,8 @@ ORGAOS_DATA = {
                 "endereco": "Avenida André Araújo, 679 - Aleixo, Manaus - AM",
                 "cep": "69060-001",
                 "coordenadas": {
-                    "latitude": -3.1121,
-                    "longitude": -60.0117
+                    "latitude": -3.1044063,
+                    "longitude": -60.0051876
                 }
             }
         },
@@ -83,8 +83,8 @@ ORGAOS_DATA = {
                 "endereco": "Avenida Brasil, 3925 - Compensa, Manaus - AM (Sede do Governo do Amazonas)",
                 "cep": "69036-110",
                 "coordenadas": {
-                    "latitude": -3.1095,
-                    "longitude": -60.0733
+                    "latitude": -15.7134952,
+                    "longitude": -47.9478492
                 }
             }
         },
@@ -92,31 +92,31 @@ ORGAOS_DATA = {
             "Companhia de Saneamento do Amazonas – COSAMA": {
                 "site": "https://cosama.am.gov.br/",
                 "transparencia": "https://cosama.am.gov.br/informacao/",
-                "endereco": "Avenida Governador Danilo de Matos Areosa, 131 - Distrito Industrial I, Manaus - AM",
-                "cep": "69075-351",
+                "endereco": "General Miranda Reis, 20, Adrianópolis - Manaus - AM",
+                "cep": "69057-320",
                 "coordenadas": {
-                    "latitude": -3.1321,
-                    "longitude": -59.9575
+                    "latitude": -3.0961235,
+                    "longitude": -60.0120522
                 }
             },
             "Processamento de Dados Amazonas S/A – PRODAM": {
                 "site": "https://www.prodam.am.gov.br/",
                 "transparencia": "https://prodam.am.gov.br/transparencia/",
-                "endereco": "Avenida Djalma Batista, 3578 - Flores, Manaus - AM",
-                "cep": "69050-010",
+                "endereco": "Rua Jonathas Pedrosa, 1937 - Praça 14 de Janeiro, Manaus - AM",
+                "cep": "69020-110",
                 "coordenadas": {
-                    "latitude": -3.0789,
-                    "longitude": -60.0211
+                    "latitude": -3.1209457,
+                    "longitude": -60.0170898
                 }
             },
             "Companhia de Gás do Amazonas – CIGÁS": {
                 "site": "https://www.cigas-am.com.br/",
                 "transparencia": "https://www.cigas-am.com.br/acesso-a-informacao-lai",
-                "endereco": "Avenida Djalma Batista, 98 - A - Chapada, Manaus - AM",
-                "cep": "69050-010",
+                "endereco": "Av. Torquato Tapajós, 6 - 100 - Flores, Manaus - AM",
+                "cep": "69058-830",
                 "coordenadas": {
-                    "latitude": -3.1042,
-                    "longitude": -60.0264
+                    "latitude": -3.0563448,
+                    "longitude": -60.0267357
                 }
             }
         }
@@ -129,8 +129,8 @@ ORGAOS_DATA = {
                 "endereco": "Avenida Brasil, 2971 - Compensa, Manaus - AM",
                 "cep": "69036-110",
                 "coordenadas": {
-                    "latitude": -3.1077,
-                    "longitude": -60.0553
+                    "latitude": -3.1092924,
+                    "longitude": -60.116744
                 }
             },
             "Prefeitura de Itacoatiara": {
@@ -139,228 +139,228 @@ ORGAOS_DATA = {
                 "endereco": "Rua Dr. Luzardo Ferreira de Melo, 2469 - Centro, Itacoatiara - AM",
                 "cep": "69100-057",
                 "coordenadas": {
-                    "latitude": -3.1415,
-                    "longitude": -58.4442
+                    "latitude": -3.1461292,
+                    "longitude": -58.4504074
                 }
             },
             "Prefeitura de Parintins": {
                 "site": "https://parintins.am.gov.br/",
                 "transparencia": "https://transparencia.parintins.am.gov.br/",
                 "endereco": "Rua Jonathas Pedrosa, 170 - Centro, Parintins - AM",
-                "cep": "69151-160",
+                "cep": "69151-200",
                 "coordenadas": {
-                    "latitude": -2.6280,
-                    "longitude": -56.7358
+                    "latitude": -2.6257271,
+                    "longitude": -56.7419314
                 }
             },
             "Prefeitura de Manacapuru": {
                 "site": "https://manacapuru.am.gov.br/",
                 "transparencia": "https://transparencia.betha.cloud/#/c__jWVln4DUOYDYfhXSJnA==",
-                "endereco": "Boulevard Pedro Rates, 1216 - Centro, Manacapuru - AM",
-                "cep": "69400-245",
+                "endereco": "R. Maria Walcacecer Nogueira, 567 - Terra Preta, Manacapuru - AM",
+                "cep": "69401-347",
                 "coordenadas": {
-                    "latitude": -3.2999,
-                    "longitude": -60.6209
+                    "latitude": -3.2897549,
+                    "longitude": -60.6449402
                 }
             },
             "Prefeitura de Coari": {
                 "site": "https://coari.am.gov.br/",
                 "transparencia": "https://transparencia.coari.am.gov.br/",
-                "endereco": "Rua 27 de Outubro, s/n - Centro, Coari - AM",
+                "endereco": "R. Cinco de Setembro, 300 - Centro, Coari - AM",
                 "cep": "69460-000",
                 "coordenadas": {
-                    "latitude": -4.0850,
-                    "longitude": -63.1414
+                    "latitude": -4.0860866,
+                    "longitude": -63.1451644
                 }
             },
             "Prefeitura de Tefé": {
                 "site": "https://tefe.am.gov.br/",
                 "transparencia": "https://transparenciamunicipalaam.org.br/p/tefe",
-                "endereco": "Estrada do Bexiga, 1008 - Jerusalém, Tefé - AM",
-                "cep": "69553-240",
+                "endereco": "R. Olávo Bilac, 500, Tefé - AM",
+                "cep": "69470-000",
                 "coordenadas": {
-                    "latitude": -3.3664,
-                    "longitude": -64.7230
+                    "latitude": -3.3465307,
+                    "longitude": -64.7102559
                 }
             },
             "Prefeitura de Maués": {
                 "site": "https://www.maues.am.gov.br/",
                 "transparencia": "http://sistemasweb.inf.br:8060/transparencia/",
-                "endereco": "Praça Coronel João Verçosa, s/n - Centro, Maués - AM",
+                "endereco": "R. Quintino Bocaiúva, 283 - Centro, Maués - AM",
                 "cep": "69190-000",
                 "coordenadas": {
-                    "latitude": -3.3860,
-                    "longitude": -57.7185
+                    "latitude": -3.3960572,
+                    "longitude": -57.7198309
                 }
             },
             "Prefeitura de Eirunepé": {
                 "site": "https://eirunepe.am.gov.br/",
                 "transparencia": "https://transparenciamunicipalaam.org.br/p/eirunepe",
-                "endereco": "Avenida Getúlio Vargas, 615 - Centro, Eirunepé - AM",
+                "endereco": "R. Ver. José Camilo, 244 - São José, Eirunepé - AM",
                 "cep": "69880-000",
                 "coordenadas": {
-                    "latitude": -6.6603,
-                    "longitude": -69.8741
+                    "latitude": -6.6677469,
+                    "longitude": -69.8676942
                 }
             },
             "Prefeitura de Humaitá": {
                 "site": "https://humaita.am.gov.br/",
                 "transparencia": "https://humaita.am.gov.br/transparencia/",
-                "endereco": "Rua Municipal, 276 - Centro, Humaitá - AM",
+                "endereco": "Rua 13 de Maio, 177 - Centro, Humaitá - AM",
                 "cep": "69800-000",
                 "coordenadas": {
-                    "latitude": -7.5064,
-                    "longitude": -63.0210
+                    "latitude": -7.5067782,
+                    "longitude": -63.0242405
                 }
             },
             "Prefeitura de Lábrea": {
                 "site": "https://labrea.am.gov.br/",
                 "transparencia": "https://labrea.am.gov.br/transparencia/",
-                "endereco": "Avenida Vinte e Oito de Março, 332 - Centro, Lábrea - AM",
+                "endereco": "R. Vinte e Dois de Outubro, 1888 - Centro, Lábrea - AM",
                 "cep": "69830-000",
                 "coordenadas": {
-                    "latitude": -7.2592,
-                    "longitude": -64.7977
+                    "latitude": -7.2655439,
+                    "longitude": -64.7987213
                 }
             },
             "Prefeitura de Manicoré": {
                 "site": "https://manicore.am.gov.br/",
                 "transparencia": "https://manicore.am.gov.br/portal-da-transparencia/",
-                "endereco": "Avenida Getúlio Vargas, 350 - Centro, Manicoré - AM",
+                "endereco": "Avenida Getúlio Vargas, 574 - Centro, Manicoré - AM",
                 "cep": "69280-000",
                 "coordenadas": {
-                    "latitude": -5.8092,
-                    "longitude": -61.3008
+                    "latitude": -5.8131252,
+                    "longitude": -61.302749
                 }
             },
             "Prefeitura de Borba": {
                 "site": "https://borba.am.gov.br/",
                 "transparencia": "https://borba.am.gov.br/portal-transparencia/",
-                "endereco": "Rua Três de Fevereiro, 1 - Centro, Borba - AM",
+                "endereco": "Av. Treze de Maio, 108 - Centro, Borba - AM",
                 "cep": "69200-000",
                 "coordenadas": {
-                    "latitude": -4.3881,
-                    "longitude": -59.5938
+                    "latitude": -4.3857373,
+                    "longitude": -59.5954571
                 }
             },
             "Prefeitura de Presidente Figueiredo": {
                 "site": "https://presidentefigueiredo.am.gov.br/",
                 "transparencia": "https://www.presidentefigueiredo.am.gov.br/transparencia/",
-                "endereco": "Avenida Acari, s/n - Centro, Presidente Figueiredo - AM",
+                "endereco": "Av. Amazonas, s/n - Centro, Presidente Figueiredo - AM",
                 "cep": "69735-000",
                 "coordenadas": {
-                    "latitude": -2.0307,
-                    "longitude": -60.0248
+                    "latitude": -2.0509266,
+                    "longitude": -60.0292541
                 }
             },
             "Prefeitura de Carauari": {
                 "site": "https://carauari.am.gov.br/",
                 "transparencia": "https://carauari.am.gov.br/transparencia/",
-                "endereco": "Praça de São Sebastião, 23 - Centro, Carauari - AM",
+                "endereco": "Rua André Costa Pereira, 148 - Centro, Carauari - AM",
                 "cep": "69500-000",
                 "coordenadas": {
-                    "latitude": -4.8833,
-                    "longitude": -66.8958
+                    "latitude": -4.8779181,
+                    "longitude": -66.8975339
                 }
             },
             "Prefeitura de Benjamin Constant": {
                 "site": "https://benjaminconstant.am.gov.br/",
                 "transparencia": "https://benjaminconstant.am.gov.br/transparencia/",
-                "endereco": "Rua General Sampaio, 252 - Centro, Benjamin Constant - AM",
+                "endereco": "R. Primeiro de Maio, s/n - Coimbra, Benjamin Constant - AM",
                 "cep": "69630-000",
                 "coordenadas": {
-                    "latitude": -4.3753,
-                    "longitude": -70.0321
+                    "latitude": -4.3839905,
+                    "longitude": -70.0522092
                 }
             },
             "Prefeitura de Boca do Acre": {
                 "site": "https://bocadoacre.am.gov.br/",
                 "transparencia": "https://transparenciamunicipalaam.org.br/p/bocadoacre",
-                "endereco": "Praça Cel. Joseh Machado, 147 - Platô do Piquiá, Boca do Acre - AM",
+                "endereco": "Av. Júlio Toá, s/n - Platô do Piquiá, Boca do Acre - AM",
                 "cep": "69850-000",
                 "coordenadas": {
-                    "latitude": -8.7523,
-                    "longitude": -67.3976
+                    "latitude": -8.7725043,
+                    "longitude": -67.3386309
                 }
             },
             "Prefeitura de Careiro": {
                 "site": "https://careiro.am.gov.br/",
                 "transparencia": "https://www.careiro.am.gov.br/portal-transparencia/",
-                "endereco": "Avenida Mário Guedes, 999 - Centro, Careiro - AM",
+                "endereco": "Rua Araj, 705 - Urbano Centro, Careiro - AM",
                 "cep": "69250-000",
                 "coordenadas": {
-                    "latitude": -3.7661,
-                    "longitude": -60.3603
+                    "latitude": -3.8239309,
+                    "longitude": -60.3653097
                 }
             },
             "Prefeitura de Iranduba": {
                 "site": "https://www.iranduba.am.gov.br/",
                 "transparencia": "https://transparencia.betha.cloud/#/yVVW6OAco0wQSzK_WdkkFg==",
-                "endereco": "Avenida Amazonas, 23 - Centro, Iranduba - AM",
-                "cep": "69400-000",
+                "endereco": "Travessa Jaraqui S/Nº, Praça dos três Poderes, Iranduba - AM",
+                "cep": "69415-000",
                 "coordenadas": {
-                    "latitude": -3.2829,
-                    "longitude": -60.1873
+                    "latitude": -3.2783895,
+                    "longitude": -60.1857766
                 }
             },
             "Prefeitura de Rio Preto da Eva": {
                 "site": "https://riopretodaeva.am.gov.br/",
                 "transparencia": "https://riopretodaeva.am.gov.br/portal-da-transparencia/",
-                "endereco": "Rua Gov. Pimenta Bueno, 23 - Centro, Rio Preto da Eva - AM",
+                "endereco": "R. Gov. Ângelo do Amaral, S/N, Rio Preto da Eva - AM",
                 "cep": "69117-000",
                 "coordenadas": {
-                    "latitude": -2.6994,
-                    "longitude": -59.7001
+                    "latitude": -2.6995027,
+                    "longitude": -59.7022377
                 }
             },
             "Prefeitura de Autazes": {
                 "site": "https://autazes.am.gov.br/",
                 "transparencia": "https://www.perseusdata2.com/pmautazes/",
-                "endereco": "Rua Júlio de Sant'Anna, 1 - Centro, Autazes - AM",
+                "endereco": "R. Francisco Barroncas, 462 - Santa Luzia, Autazes - AM",
                 "cep": "69240-000",
                 "coordenadas": {
-                    "latitude": -3.5794,
-                    "longitude": -59.1317
+                    "latitude": -3.5822484,
+                    "longitude": -59.1325928
                 }
             },
             "Prefeitura de Barcelos": {
                 "site": "https://barcelos.am.gov.br/",
                 "transparencia": "https://transparenciamunicipalaam.org.br/p/barcelos",
-                "endereco": "Avenida Ajuricaba, 453 - Centro, Barcelos - AM",
+                "endereco": "R. Tenreiro Aranha, 204 - Centro, Barcelos - AM",
                 "cep": "69700-000",
                 "coordenadas": {
-                    "latitude": -0.9751,
-                    "longitude": -62.9250
+                    "latitude": -0.9692098,
+                    "longitude": -62.9288813
                 }
             },
             "Prefeitura de Fonte Boa": {
                 "site": "https://fonteboa.am.gov.br/",
                 "transparencia": "https://transparenciamunicipalaam.org.br/p/fonte-boa",
-                "endereco": "Rua Sete de Setembro, 2 - Centro, Fonte Boa - AM",
+                "endereco": "Rua Boulevard Álvaro Maia, 260 A - Centro, Fonte Boa - AM",
                 "cep": "69670-000",
                 "coordenadas": {
-                    "latitude": -2.5143,
-                    "longitude": -66.0921
+                    "latitude": -2.5149367,
+                    "longitude": -66.1065709
                 }
             },
             "Prefeitura de Guajará": {
                 "site": "https://guajara.am.gov.br/",
                 "transparencia": "https://guajara.am.gov.br/portal-transparencia/",
-                "endereco": "Rua 27 de Dezembro, s/n - Centro, Guajará - AM",
+                "endereco": "R. Edson Herculano, 561, Guajará - AM",
                 "cep": "69865-000",
                 "coordenadas": {
-                    "latitude": -7.5028,
-                    "longitude": -72.5901
+                    "latitude": -7.5485061,
+                    "longitude": -72.5913583
                 }
             },
             "Prefeitura de Boa Vista do Ramos": {
-                "site": "https://boavistadoramos.am.gov.br/",
+                "site": "https://www.portalbvr.com.br/",
                 "transparencia": "https://boavistadoramos.am.gov.br/transparencia/",
-                "endereco": "Avenida Castelo Branco, 305 - Centro, Boa Vista do Ramos - AM",
+                "endereco": "R. Sen. José Esteves, 394-454, Boa Vista do Ramos - AM",
                 "cep": "69195-000",
                 "coordenadas": {
-                    "latitude": -2.9739,
-                    "longitude": -57.5745
+                    "latitude": -2.9703898,
+                    "longitude": -57.5911363
                 }
             }
         },
@@ -572,8 +572,8 @@ ORGAOS_DATA = {
 
 # Coordenadas de Manaus (capital) para cálculo de distâncias
 COORDENADAS_MANAUS = {
-    "latitude": -3.1190,
-    "longitude": -60.0217
+    "latitude": -3.0999323,
+    "longitude": -60.0171727
 }
 
 # Funções auxiliares atualizadas
