@@ -133,6 +133,46 @@ ORGAOS_DATA = {
                     "longitude": -60.116744
                 }
             },
+            "Prefeitura de Alvarães": {
+                "site": "⚠️ Sem site oficial - Consulte o portal de transparência",
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/alvaraes",
+                "endereco": "Praça da Liberdade, 329 – Centro – Alvarães - AM",
+                "cep": "69540-000",
+                "coordenadas": {
+                    "latitude": -3.2126195,
+                    "longitude": -64.8103236
+                }
+            },
+            "Prefeitura de Amaturá": {
+                "site": "https://amatura.am.gov.br/",
+                "transparencia": "https://amatura.am.gov.br/transparencia/",
+                "endereco": "Av. 21 de Junho, n°1746, Centro, Amaturá - AM",
+                "cep": "69620-000",
+                "coordenadas": {
+                    "latitude": -3.3624234,
+                    "longitude": -68.2001762
+                }
+            },
+            "Prefeitura de Anamã": {
+                "site": "https://anama.am.gov.br/",
+                "transparencia": "https://anama.am.gov.br/transparencia/",
+                "endereco": "R. Álvaro Maia, 38, Centro, Anamã - AM",
+                "cep": "69620-000",
+                "coordenadas": {
+                    "latitude": -3.5769684,
+                    "longitude": -61.4080254
+                }
+            },
+            "Prefeitura de Anori": {
+                "site": "⚠️ Sem site oficial - Consulte o portal de transparência",
+                "transparencia": "https://transparenciamunicipalaam.org.br/p/anori",
+                "endereco": "Av. Trinta e Um de Março, 344, Centro, Anori - AM",
+                "cep": "69440-000",
+                "coordenadas": {
+                    "latitude": -3.7483012,
+                    "longitude": -61.6624128
+                }
+            },
             "Prefeitura de Itacoatiara": {
                 "site": "https://prefeituradeitacoatiara.com.br/",
                 "transparencia": "https://prefeituradeitacoatiara.com.br/transparencia",
