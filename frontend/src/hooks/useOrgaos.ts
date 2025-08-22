@@ -1,68 +1,57 @@
+// Conteúdo do arquivo: src/hooks/useOrgaos.ts
+
 import { useState, useEffect, useCallback } from 'react';
-import { OrgaoMap, EstatisticasMapa, FiltrosOrgaos } from '../types/orgaos';
+import { OrgaoMap, EstatisticasMapa, FiltrosOrgaos, ResultadoBusca } from '../types/orgaos'; // Importações corrigidas
 import { OrgaosApiService } from '../services/orgaosApi';
 
 interface UseOrgaosReturn {
   orgaos: OrgaoMap[];
   estatisticas: EstatisticasMapa | null;
-  loading: boolean;
+  filters: FiltrosOrgaos;
+  setFilters: (newFilters: FiltrosOrgaos) => void;
+  isLoading: boolean;
   error: string | null;
-  buscarOrgaos: (termo: string, filtros?: FiltrosOrgaos) => Promise<void>;
-  recarregarOrgaos: () => Promise<void>;
+  refreshOrgaos: () => void;
 }
 
-export const useOrgaos = (filters: FiltrosOrgaos = {}): UseOrgaosReturn => {
+export const useOrgaos = (): UseOrgaosReturn => {
   const [orgaos, setOrgaos] = useState<OrgaoMap[]>([]);
   const [estatisticas, setEstatisticas] = useState<EstatisticasMapa | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState<FiltrosOrgaos>({});
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadOrgaos = useCallback(async () => {
+  const fetchOrgaos = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
-      
-      const [orgaosData, statsData] = await Promise.all([
-        OrgaosApiService.fetchOrgaos(filters),
-        OrgaosApiService.fetchEstatisticas()
-      ]);
-      
-      setOrgaos(orgaosData);
-      setEstatisticas(statsData);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
-      setError(errorMessage);
-      console.error('Erro ao carregar órgãos:', err);
+      // Assumindo que OrgaosApiService.buscarOrgaosMapa agora retorna ResultadoBusca
+      const data: ResultadoBusca = await OrgaosApiService.buscarOrgaosMapa(filters);
+      setOrgaos(data.orgaos);
+      setEstatisticas(data.estatisticas);
+    } catch (err: any) {
+      setError(err.message || 'Erro ao carregar órgãos.');
+      console.error('Erro ao buscar órgãos:', err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  }, [filters]);
+  }, [filters]); // Refetch quando os filtros mudam
 
   useEffect(() => {
-    loadOrgaos();
-  }, [loadOrgaos]);
+    fetchOrgaos();
+  }, [fetchOrgaos]);
 
-  const buscarOrgaos = async (termo: string, filtros: FiltrosOrgaos = {}) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const resultados = await OrgaosApiService.buscarOrgaos(termo, filtros);
-      setOrgaos(resultados.resultados);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro na busca';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+  const refreshOrgaos = useCallback(() => {
+    fetchOrgaos();
+  }, [fetchOrgaos]);
 
   return {
     orgaos,
     estatisticas,
-    loading,
+    filters,
+    setFilters,
+    isLoading,
     error,
-    buscarOrgaos,
-    recarregarOrgaos: loadOrgaos
+    refreshOrgaos,
   };
 };
