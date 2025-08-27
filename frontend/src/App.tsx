@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
-import HomePage from './components/HomePage';
+import MapaPrincipal from './components/MapaPrincipal';
 import AuditoriaPage from './components/AuditoriaPage';
 import RankingPage from './components/RankingPage';
 
@@ -16,13 +16,13 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (currentView) {
       case 'mapa':
-        return <HomePage />;
+        return <MapaPrincipal />;
       case 'ranking':
         return <RankingPage />;
       case 'auditoria':
         return <AuditoriaPage />;
       default:
-        return <HomePage />; // Fallback
+        return <MapaPrincipal />; // Fallback
     }
   };
 

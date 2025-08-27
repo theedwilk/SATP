@@ -1,0 +1,554 @@
+[
+    {
+        "nome": "Câmara Municipal de Iranduba",
+        "valor": 75.54,
+        "municipio": "Iranduba",
+        "poder": "L",
+        "essenciais_final": 95.24,
+        "nivel_final": "Elevado"
+    },
+    {
+        "nome": "Prefeitura Municipal de Maués",
+        "valor": 64.93,
+        "municipio": "Maués",
+        "poder": "E",
+        "essenciais_final": 93.94,
+        "nivel_final": "Intermediário"
+    },
+    {
+        "nome": "Prefeitura Municipal de Amaturá",
+        "valor": 55.91,
+        "municipio": "Amaturá",
+        "poder": "E",
+        "essenciais_final": 72.73,
+        "nivel_final": "Intermediário"
+    },
+    {
+        "nome": "Prefeitura Municipal de Apuí",
+        "valor": 76.91,
+        "municipio": "Apuí",
+        "poder": "E",
+        "essenciais_final": 78.79,
+        "nivel_final": "Elevado"
+    },
+    {
+        "nome": "Prefeitura Municipal de Carauari",
+        "valor": 72.05,
+        "municipio": "Carauari",
+        "poder": "E",
+        "essenciais_final": 81.82,
+        "nivel_final": "Intermediário"
+    },
+    {
+        "nome": "Câmara Municipal de Carauari",
+        "valor": 70.57,
+        "municipio": "Carauari",
+        "poder": "L",
+        "essenciais_final": 85.71,
+        "nivel_final": "Intermediário"
+    },
+    {
+        "nome": "Prefeitura Municipal de Careiro da Várzea",
+        "valor": 57.68,
+        "municipio": "Careiro da Várzea",
+        "poder": "E",
+        "essenciais_final": 81.82,
+        "nivel_final": "Intermediário"
+    },
+    {
+        "nome": "Prefeitura Municipal de Humaitá",
+        "valor": 4.92,
+        "municipio": "Humaitá",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inicial"
+    },
+    {
+        "nome": "Prefeitura Municipal de Ipixuna",
+        "valor": 73.12,
+        "municipio": "Ipixuna",
+        "poder": "E",
+        "essenciais_final": 54.55,
+        "nivel_final": "Intermediário"
+    },
+    {
+        "nome": "Prefeitura Municipal de Alvarães",
+        "valor": 43.47,
+        "municipio": "Alvarães",
+        "poder": "E",
+        "essenciais_final": 93.94,
+        "nivel_final": "Básico"
+    },
+    {
+        "nome": "Câmara Municipal de Lábrea",
+        "valor": 52.84,
+        "municipio": "Lábrea",
+        "poder": "L",
+        "essenciais_final": 71.43,
+        "nivel_final": "Intermediário"
+    },
+    {
+        "nome": "Prefeitura Municipal de Manaquiri",
+        "valor": 90.04,
+        "municipio": "Manaquiri",
+        "poder": "E",
+        "essenciais_final": 87.88,
+        "nivel_final": "Elevado"
+    },
+    {
+        "nome": "Câmara Municipal de Pauini",
+        "valor": 28.81,
+        "municipio": "Pauini",
+        "poder": "L",
+        "essenciais_final": 42.86,
+        "nivel_final": "Inicial"
+    },
+    {
+        "nome": "Câmara Municipal de Manaus",
+        "valor": 66.53,
+        "municipio": "Manaus",
+        "poder": "L",
+        "essenciais_final": 80.95,
+        "nivel_final": "Intermediário"
+    },
+    {
+        "nome": "Prefeitura Municipal de Tabatinga",
+        "valor": 68.27,
+        "municipio": "Tabatinga",
+        "poder": "E",
+        "essenciais_final": 87.88,
+        "nivel_final": "Intermediário"
+    },
+    {
+        "nome": "Prefeitura Municipal de Manaus",
+        "valor": 85.24,
+        "municipio": "Manaus",
+        "poder": "E",
+        "essenciais_final": 100.0,
+        "nivel_final": "Ouro"
+    },
+    {
+        "nome": "Governo do Estado de Amazonas",
+        "valor": 96.69,
+        "municipio": "Manaus",
+        "poder": "E",
+        "essenciais_final": 100.0,
+        "nivel_final": "Diamante"
+    },
+    {
+        "nome": "Defensoria Pública do Estado de Amazonas",
+        "valor": 98.2,
+        "municipio": "Manaus",
+        "poder": "D",
+        "essenciais_final": 100.0,
+        "nivel_final": "Diamante"
+    },
+    {
+        "nome": "Ministério Público do Estado de Amazonas",
+        "valor": 95.56,
+        "municipio": "Manaus",
+        "poder": "M",
+        "essenciais_final": 100.0,
+        "nivel_final": "Diamante"
+    },
+    {
+        "nome": "Tribunal de Contas do Estado de Amazonas",
+        "valor": 100.0,
+        "municipio": "Manaus",
+        "poder": "T",
+        "essenciais_final": 100.0,
+        "nivel_final": "Diamante"
+    },
+    {
+        "nome": "Tribunal de Justiça do Estado de Amazonas",
+        "valor": 99.06,
+        "municipio": "Manaus",
+        "poder": "J",
+        "essenciais_final": 100.0,
+        "nivel_final": "Diamante"
+    },
+    {
+        "nome": "Câmara Municipal de Parintins",
+        "valor": 98.68,
+        "municipio": "Parintins",
+        "poder": "L",
+        "essenciais_final": 100.0,
+        "nivel_final": "Diamante"
+    },
+    {
+        "nome": "Câmara Municipal de Presidente Figueiredo",
+        "valor": 43.9,
+        "municipio": "Presidente Figueiredo",
+        "poder": "L",
+        "essenciais_final": 66.67,
+        "nivel_final": "Básico"
+    },
+    {
+        "nome": "Prefeitura Municipal de Rio Preto da Eva",
+        "valor": 42.41,
+        "municipio": "Rio Preto da Eva",
+        "poder": "E",
+        "essenciais_final": 54.55,
+        "nivel_final": "Básico"
+    },
+    {
+        "nome": "Câmara Municipal de Codajás",
+        "valor": 21.86,
+        "municipio": "Codajás",
+        "poder": "L",
+        "essenciais_final": 42.86,
+        "nivel_final": "Inicial"
+    },
+    {
+        "nome": "Câmara Municipal de Careiro",
+        "valor": 12.18,
+        "municipio": "Careiro",
+        "poder": "L",
+        "essenciais_final": 33.33,
+        "nivel_final": "Inicial"
+    },
+    {
+        "nome": "Prefeitura Municipal de Jutaí",
+        "valor": 17.35,
+        "municipio": "Jutaí",
+        "poder": "E",
+        "essenciais_final": 21.21,
+        "nivel_final": "Inicial"
+    },
+    {
+        "nome": "Prefeitura Municipal de Manicoré",
+        "valor": 55.61,
+        "municipio": "Manicoré",
+        "poder": "E",
+        "essenciais_final": 84.85,
+        "nivel_final": "Intermediário"
+    },
+    {
+        "nome": "Prefeitura Municipal de Iranduba",
+        "valor": 27.56,
+        "municipio": "Iranduba",
+        "poder": "E",
+        "essenciais_final": 42.42,
+        "nivel_final": "Inicial"
+    },
+    {
+        "nome": "Prefeitura Municipal de Autazes",
+        "valor": 16.05,
+        "municipio": "Autazes",
+        "poder": "E",
+        "essenciais_final": 27.27,
+        "nivel_final": "Inicial"
+    },
+    {
+        "nome": "Câmara Municipal de Apuí",
+        "valor": 47.71,
+        "municipio": "Apuí",
+        "poder": "L",
+        "essenciais_final": 52.38,
+        "nivel_final": "Básico"
+    },
+    {
+        "nome": "Prefeitura Municipal de Borba",
+        "valor": 17.73,
+        "municipio": "Borba",
+        "poder": "E",
+        "essenciais_final": 18.18,
+        "nivel_final": "Inicial"
+    },
+    {
+        "nome": "Prefeitura Municipal de Atalaia do Norte",
+        "valor": 10.17,
+        "municipio": "Atalaia do Norte",
+        "poder": "E",
+        "essenciais_final": 6.06,
+        "nivel_final": "Inicial"
+    },
+    {
+        "nome": "Câmara Municipal de Barcelos",
+        "valor": 0.0,
+        "municipio": "Barcelos",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Boca do Acre",
+        "valor": 0.0,
+        "municipio": "Boca do Acre",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Pauini",
+        "valor": 0.0,
+        "municipio": "Pauini",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Itacoatiara",
+        "valor": 0.0,
+        "municipio": "Itacoatiara",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de São Paulo de Olivença",
+        "valor": 0.0,
+        "municipio": "São Paulo de Olivença",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Anori",
+        "valor": 0.0,
+        "municipio": "Anori",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Barreirinha",
+        "valor": 0.0,
+        "municipio": "Barreirinha",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Tefé",
+        "valor": 0.0,
+        "municipio": "Tefé",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Autazes",
+        "valor": 0.0,
+        "municipio": "Autazes",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Coari",
+        "valor": 0.0,
+        "municipio": "Coari",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Barcelos",
+        "valor": 0.0,
+        "municipio": "Barcelos",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Eirunepé",
+        "valor": 0.0,
+        "municipio": "Eirunepé",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Santo Antônio do Içá",
+        "valor": 0.0,
+        "municipio": "Santo Antônio do Içá",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Silves",
+        "valor": 0.0,
+        "municipio": "Silves",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Atalaia do Norte",
+        "valor": 0.0,
+        "municipio": "Atalaia do Norte",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Envira",
+        "valor": 0.0,
+        "municipio": "Envira",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Careiro da Várzea",
+        "valor": 0.0,
+        "municipio": "Careiro da Várzea",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Tapauá",
+        "valor": 0.0,
+        "municipio": "Tapauá",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Tabatinga",
+        "valor": 0.0,
+        "municipio": "Tabatinga",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Amaturá",
+        "valor": 0.0,
+        "municipio": "Amaturá",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de São Sebastião do Uatumã",
+        "valor": 0.0,
+        "municipio": "São Sebastião do Uatumã",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Uarini",
+        "valor": 0.0,
+        "municipio": "Uarini",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de São Sebastião do Uatumã",
+        "valor": 0.0,
+        "municipio": "São Sebastião do Uatumã",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Benjamin Constant",
+        "valor": 0.0,
+        "municipio": "Benjamin Constant",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Guajará",
+        "valor": 0.0,
+        "municipio": "Guajará",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Rio Preto da Eva",
+        "valor": 0.0,
+        "municipio": "Rio Preto da Eva",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de São Paulo de Olivença",
+        "valor": 0.0,
+        "municipio": "São Paulo de Olivença",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Presidente Figueiredo",
+        "valor": 0.0,
+        "municipio": "Presidente Figueiredo",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Fonte Boa",
+        "valor": 0.0,
+        "municipio": "Fonte Boa",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Guajará",
+        "valor": 0.0,
+        "municipio": "Guajará",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Santo Antônio do Içá",
+        "valor": 0.0,
+        "municipio": "Santo Antônio do Içá",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Careiro",
+        "valor": 0.0,
+        "municipio": "Careiro",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Uarini",
+        "valor": 0.0,
+        "municipio": "Uarini",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Prefeitura Municipal de Itapiranga",
+        "valor": 0.0,
+        "municipio": "Itapiranga",
+        "poder": "E",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Benjamin Constant",
+        "valor": 0.0,
+        "municipio": "Benjamin Constant",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    },
+    {
+        "nome": "Câmara Municipal de Envira",
+        "valor": 0.0,
+        "municipio": "Envira",
+        "poder": "L",
+        "essenciais_final": 0.0,
+        "nivel_final": "Inexistente"
+    }
+]

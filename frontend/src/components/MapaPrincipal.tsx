@@ -1,59 +1,418 @@
-// MapaPrincipal.tsx
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import orgaosRanking2024 from '../data/orgaos_amazonas_ranking_2024.json';
+import amazonasGeoJSONData from '../data/AM_Municipios_2024.json';
+import { Feature, Geometry, GeoJsonProperties, FeatureCollection } from 'geojson';
 
-interface MunicipalityInfo {
-  id: string;
-  name: string;
-  // Você pode adicionar outras informações relevantes do município aqui, como coordenadas, população, etc.
+// Fix para ícones do Leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Interfaces para tipagem
+export interface GeoJSONFeature extends Feature<Geometry, GeoJsonProperties> {
+  properties: {
+    NM_MUNICIP?: string;
+    name?: string;
+    [key: string]: any;
+  };
+}
+export interface GeoJSONFeatureCollection extends FeatureCollection<Geometry, GeoJsonProperties> {}
+
+interface OrgaoRanking {
+  nome: string;
+  valor: number;
+  municipio: string;
+  poder: string;
+  essenciais_final: number;
+  nivel_final: string;
 }
 
-// Dados de municípios de exemplo (em uma aplicação real, viriam de uma API ou arquivo JSON)
-const mockMunicipalities: MunicipalityInfo[] = [
-  { id: '1', name: 'Manaus' },
-  { id: '2', name: 'Parintins' },
-  { id: '3', name: 'Itacoatiara' },
-  { id: '4', name: 'Manacapuru' },
-  { id: '5', name: 'Coari' },
-  // ... adicione os outros 57 municípios do Amazonas aqui
-];
+interface MunicipalityInfo {
+  name: string;
+  orgaos: OrgaoRanking[];
+  totalOrgaos: number;
+  mediaGeral: number;
+  melhorNivel: string;
+  posicaoRanking: number;
+  centroid?: L.LatLngExpression;
+}
+
+// Enum para os tipos de poder
+const PODER_LABELS: { [key: string]: string } = {
+  'E': 'Executivo',
+  'L': 'Legislativo',
+  'J': 'Judiciário',
+  'M': 'Ministério Público',
+  'D': 'Defensoria',
+  'T': 'Tribunal de Contas'
+};
+
+// Cores baseadas no melhor nível do município
+const getNivelColor = (nivel: string): string => {
+  switch (nivel) {
+    case 'Diamante': return '#0891b2'; // Teal
+    case 'Ouro': return '#d97706'; // Amber
+    case 'Elevado': return '#059669'; // Green (Seu verde da região)
+    case 'Intermediário': return '#2563eb'; // Blue
+    case 'Básico': return '#ea580c'; // Orange
+    case 'Inicial': return '#dc2626'; // Red
+    case 'Inexistente': return '#6b7280'; // Gray
+    default: return '#22c55e'; // Verde claro padrão para municípios sem dados específicos
+  }
+};
 
 const MapaPrincipal: React.FC = () => {
-  const handleMunicipalityClick = (municipality: MunicipalityInfo) => {
-    alert(`Você clicou no município de ${municipality.name}. Aqui você veria as informações dos órgãos deste município.`);
-    // Em uma aplicação real, isso poderia navegar para uma página de detalhes do município,
-    // abrir um modal com informações, ou filtrar dados em outra seção.
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const geoJsonLayerRef = useRef<L.GeoJSON | null>(null);
+  const [selectedMunicipalityName, setSelectedMunicipalityName] = useState<string | null>(null);
+  const [selectedMunicipalityDetails, setSelectedMunicipalityDetails] = useState<MunicipalityInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [municipalitiesData, setMunicipalitiesData] = useState<{ [key: string]: MunicipalityInfo }>({});
+
+  // Processa os dados dos órgãos para criar informações por município
+  useEffect(() => {
+    const processData = () => {
+      const municipalitiesMap: { [key: string]: MunicipalityInfo } = {};
+      const dadosRanking: OrgaoRanking[] = orgaosRanking2024;
+
+      dadosRanking.forEach((orgao) => {
+        if (!municipalitiesMap[orgao.municipio]) {
+          municipalitiesMap[orgao.municipio] = {
+            name: orgao.municipio,
+            orgaos: [],
+            totalOrgaos: 0,
+            mediaGeral: 0,
+            melhorNivel: 'Inexistente',
+            posicaoRanking: 0
+          };
+        }
+        municipalitiesMap[orgao.municipio].orgaos.push(orgao);
+      });
+
+      const niveisOrdem = ['Diamante', 'Ouro', 'Elevado', 'Intermediário', 'Básico', 'Inicial', 'Inexistente'];
+      const sortedMunicipalities = Object.values(municipalitiesMap).sort((a, b) => {
+        if (b.mediaGeral !== a.mediaGeral) {
+          return b.mediaGeral - a.mediaGeral;
+        }
+        return niveisOrdem.indexOf(a.melhorNivel) - niveisOrdem.indexOf(b.melhorNivel);
+      });
+
+      sortedMunicipalities.forEach((data, index) => {
+        data.totalOrgaos = data.orgaos.length;
+        data.mediaGeral = data.orgaos.reduce((acc, org) => acc + org.valor, 0) / data.orgaos.length;
+        
+        data.melhorNivel = data.orgaos.reduce((melhor, orgao) => {
+          const nivelAtualIndex = niveisOrdem.indexOf(orgao.nivel_final);
+          const melhorNivelIndex = niveisOrdem.indexOf(melhor);
+          return nivelAtualIndex < melhorNivelIndex ? orgao.nivel_final : melhor;
+        }, 'Inexistente');
+        
+        data.posicaoRanking = index + 1;
+      });
+
+      setMunicipalitiesData(municipalitiesMap);
+      setIsLoading(false);
+    };
+
+    processData();
+  }, []);
+
+  // Efeito para atualizar os detalhes do município selecionado para o painel
+  useEffect(() => {
+    if (selectedMunicipalityName && municipalitiesData[selectedMunicipalityName]) {
+      setSelectedMunicipalityDetails(municipalitiesData[selectedMunicipalityName]);
+    } else {
+      setSelectedMunicipalityDetails(null);
+    }
+  }, [selectedMunicipalityName, municipalitiesData]);
+
+  // Função para fechar o painel de detalhes e limpar a seleção
+  const closeDetails = () => {
+    setSelectedMunicipalityName(null);
+    if (geoJsonLayerRef.current) {
+      // Reseta o estilo de todas as camadas
+      geoJsonLayerRef.current.eachLayer((layer: any) => {
+        if (layer.feature && geoJsonLayerRef.current) {
+          geoJsonLayerRef.current.resetStyle(layer);
+        }
+      });
+    }
   };
 
-  return (
-    <div className="p-8 bg-gray-100 flex-1">
-      <h1 className="text-3xl font-bold text-blue-800 mb-6">Mapa do Estado do Amazonas</h1>
-      <p className="text-gray-700 mb-8">
-        Explore os municípios do Amazonas para visualizar informações dos órgãos de transparência.
-      </p>
+  // Função para obter o estilo do polígono
+  const getStyle = (feature: GeoJSONFeature | undefined) => {
+    if (!feature || !feature.properties) {
+      return {
+        fillColor: '#22c55e', // Verde claro padrão
+        weight: 1,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+      };
+    }
 
-      <div className="bg-white rounded-lg shadow-md p-6 h-[600px] flex items-center justify-center text-gray-500 text-lg relative">
-        <p className="text-center">
-          <span className="font-semibold">Mapa interativo do Amazonas aqui.</span><br />
-          (Integração com biblioteca de mapas como Leaflet ou Mapbox)<br />
-          Cada um dos 62 municípios seria clicável.
-        </p>
-        {/* Exemplo de municípios clicáveis (simplificado para ilustração) */}
-        <div className="absolute bottom-8 right-8 bg-blue-50 p-4 rounded-lg shadow-inner">
-          <h4 className="font-semibold mb-2 text-blue-800">Municípios (Exemplo):</h4>
-          <div className="flex flex-wrap gap-2">
-            {mockMunicipalities.slice(0, 5).map(muni => (
+    const municipioNome = feature.properties.NM_MUNICIP || feature.properties.name || 'Desconhecido';
+    const info = municipalitiesData[municipioNome];
+    
+    // VERDE CLARO como cor padrão para todos os municípios
+    const baseColor = info ? getNivelColor(info.melhorNivel) : '#22c55e';
+
+    // Verifica se este município é o que está atualmente selecionado
+    const isSelected = municipioNome === selectedMunicipalityName;
+
+    return {
+      fillColor: isSelected ? '#047857' : baseColor, // Verde escuro para selecionado, cor base caso contrário
+      weight: isSelected ? 3 : 1,
+      opacity: 1,
+      color: isSelected ? '#374151' : 'white',
+      dashArray: '3',
+      fillOpacity: isSelected ? 0.9 : 0.7
+    };
+  };
+
+  // Inicialização e atualização do mapa
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    if (!mapInstanceRef.current) {
+      mapInstanceRef.current = L.map(mapRef.current, {
+        center: [-3.4168, -65.8561],
+        zoom: 6,
+        minZoom: 5,
+        maxZoom: 12,
+        zoomControl: false
+      });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(mapInstanceRef.current);
+
+      L.control.zoom({ position: 'topright' }).addTo(mapInstanceRef.current);
+    }
+
+    if (!municipalitiesData || Object.keys(municipalitiesData).length === 0) return;
+
+    // Remove a camada GeoJSON existente se houver
+    if (geoJsonLayerRef.current) {
+      mapInstanceRef.current.removeLayer(geoJsonLayerRef.current);
+    }
+
+    // Adiciona a camada GeoJSON dos municípios
+    const geoJsonLayer = L.geoJSON(amazonasGeoJSONData as GeoJSONFeatureCollection, {
+      style: getStyle,
+      onEachFeature: (feature: GeoJSONFeature, layer) => {
+        if (!feature.properties) return;
+        
+        const municipioNome = feature.properties.NM_MUNICIP || feature.properties.name || 'Desconhecido';
+        const info = municipalitiesData[municipioNome];
+
+        if (info) {
+          const popupContent = `
+            <div style="font-family: sans-serif; padding: 5px;">
+              <h4 style="margin: 0 0 5px 0; color: #333; font-size: 1.1em;">${info.name}</h4>
+              <p style="margin: 0; font-size: 0.9em; color: #555;">Média Geral: <strong>${info.mediaGeral.toFixed(1)}%</strong></p>
+              <p style="margin: 0; font-size: 0.9em; color: #555;">Nível: <strong style="color: ${getNivelColor(info.melhorNivel)};">${info.melhorNivel}</strong></p>
+              <p style="margin: 0; font-size: 0.9em; color: #555;">Órgãos Avaliados: <strong>${info.orgaos.length}</strong></p>
+            </div>
+          `;
+          layer.bindPopup(popupContent);
+        } else {
+          // Popup para municípios sem dados específicos
+          const popupContent = `
+            <div style="font-family: sans-serif; padding: 5px;">
+              <h4 style="margin: 0 0 5px 0; color: #333; font-size: 1.1em;">${municipioNome}</h4>
+              <p style="margin: 0; font-size: 0.9em; color: #555;">Nenhum dado disponível</p>
+            </div>
+          `;
+          layer.bindPopup(popupContent);
+        }
+
+        // Armazena o nome do município no layer para acesso posterior
+        (layer as any).municipioNome = municipioNome;
+
+        layer.on({
+          click: (e) => {
+            if (!feature.properties) return;
+            const clickedMunicipioNome = feature.properties.NM_MUNICIP || feature.properties.name || 'Desconhecido';
+
+            if (selectedMunicipalityName === clickedMunicipioNome) {
+              setSelectedMunicipalityName(null);
+            } else {
+              setSelectedMunicipalityName(clickedMunicipioNome);
+            }
+
+            // Atualiza o estilo de TODOS os layers manualmente
+            if (geoJsonLayerRef.current) {
+              geoJsonLayerRef.current.eachLayer((layer: any) => {
+                if (layer.setStyle) {
+                  const featureMunicipio = layer.municipioNome;
+                  const isThisSelected = featureMunicipio === clickedMunicipioNome && selectedMunicipalityName !== clickedMunicipioNome;
+                  
+                  if (isThisSelected) {
+                    layer.setStyle({
+                      fillColor: '#047857',
+                      weight: 3,
+                      color: '#374151',
+                      fillOpacity: 0.9
+                    });
+                  } else {
+                    // Reseta o estilo para o padrão
+                    const originalStyle = getStyle(layer.feature);
+                    layer.setStyle(originalStyle);
+                  }
+                }
+              });
+            }
+          },
+          mouseover: (e) => {
+            if (!feature.properties) return;
+            const layer = e.target;
+            const hoveredMunicipioNome = feature.properties.NM_MUNICIP || feature.properties.name || 'Desconhecido';
+
+            // Aplica estilo de hover apenas se não for o município atualmente selecionado
+            if (hoveredMunicipioNome !== selectedMunicipalityName) {
+              layer.setStyle({
+                weight: 3,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.9
+              });
+            }
+            layer.bringToFront();
+          },
+          mouseout: (e) => {
+            const layer = e.target;
+            const hoveredMunicipioNome = (layer as any).municipioNome;
+            
+            // Reseta o estilo apenas se não for o município selecionado
+            if (hoveredMunicipioNome !== selectedMunicipalityName) {
+              const originalStyle = getStyle((layer as any).feature);
+              layer.setStyle(originalStyle);
+            }
+          }
+        });
+      },
+    }).addTo(mapInstanceRef.current);
+
+    geoJsonLayerRef.current = geoJsonLayer;
+
+    if (geoJsonLayer.getBounds().isValid()) {
+      mapInstanceRef.current.fitBounds(geoJsonLayer.getBounds());
+    }
+
+    setIsLoading(false);
+  }, [mapInstanceRef.current, municipalitiesData, selectedMunicipalityName]);
+
+  return (
+    <div className="relative h-screen w-full flex">
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+          <p className="text-lg text-gray-700">Carregando dados do mapa...</p>
+        </div>
+      )}
+      <div ref={mapRef} className="flex-1 h-full z-10"></div>
+
+      {/* Painel de Detalhes do Município */}
+      {selectedMunicipalityDetails && (
+        <div className="absolute right-0 top-0 h-full w-96 bg-white shadow-lg z-20 flex flex-col">
+          <div className="p-4 border-b border-gray-200 bg-gray-50">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h2 className="text-xl font-bold text-gray-900 mb-1">
+                  {selectedMunicipalityDetails.name}
+                </h2>
+                <div className="space-y-1">
+                  <div className="text-sm text-gray-600">
+                    Órgãos Avaliados: <span className="font-medium">{selectedMunicipalityDetails.orgaos.length}</span>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Média Geral: <span className="font-medium">{selectedMunicipalityDetails.mediaGeral.toFixed(1)}%</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: getNivelColor(selectedMunicipalityDetails.melhorNivel) }}
+                    ></span>
+                    <span className="text-sm font-medium">{selectedMunicipalityDetails.melhorNivel}</span>
+                  </div>
+                </div>
+              </div>
               <button
-                key={muni.id}
-                onClick={() => handleMunicipalityClick(muni)}
-                className="px-3 py-1 bg-blue-200 text-blue-800 rounded-full text-sm hover:bg-blue-300 transition-colors"
+                onClick={closeDetails}
+                className="text-gray-500 hover:text-gray-700 p-1"
               >
-                {muni.name}
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
-            ))}
-            <span className="text-sm text-gray-600">... e mais 57</span>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-4">
+            <h3 className="text-lg font-semibold mb-4 text-gray-800">
+              Órgãos Avaliados ({selectedMunicipalityDetails.orgaos.length})
+            </h3>
+            <div className="space-y-3">
+              {selectedMunicipalityDetails.orgaos
+                .sort((a, b) => b.valor - a.valor)
+                .map((orgao, index) => (
+                  <div
+                    key={`${orgao.nome}-${index}`}
+                    className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="font-semibold text-gray-900 text-sm leading-tight">
+                        {orgao.nome}
+                      </h4>
+                      <span className="text-lg font-bold text-blue-600">
+                        {orgao.valor.toFixed(1)}%
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-xs text-gray-600">
+                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                        {PODER_LABELS[orgao.poder] || orgao.poder}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <span
+                          className="w-2 h-2 rounded-full"
+                          style={{ backgroundColor: getNivelColor(orgao.nivel_final) }}
+                        ></span>
+                        <span className="font-medium">{orgao.nivel_final}</span>
+                      </div>
+                    </div>
+                    <div className="mt-2 text-xs text-gray-500">
+                      Essenciais: {orgao.essenciais_final.toFixed(1)}%
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          <div className="p-4 border-t border-gray-200 bg-gray-50">
+            <div className="grid grid-cols-2 gap-4 text-center text-sm">
+              <div>
+                <div className="font-semibold text-gray-800">Melhor Órgão</div>
+                <div className="text-blue-600 font-bold">
+                  {Math.max(...selectedMunicipalityDetails.orgaos.map(o => o.valor)).toFixed(1)}%
+                </div>
+              </div>
+              <div>
+                <div className="font-semibold text-gray-800">Média Essenciais</div>
+                <div className="text-green-600 font-bold">
+                  {(selectedMunicipalityDetails.orgaos.reduce((acc, org) => acc + org.essenciais_final, 0) / selectedMunicipalityDetails.orgaos.length).toFixed(1)}%
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
