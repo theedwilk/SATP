@@ -177,6 +177,68 @@ const MapaPrincipal: React.FC = () => {
     };
   };
 
+  // Função para criar conteúdo do tooltip com dados dos órgãos
+  const createTooltipContent = (municipioNome: string, info: MunicipalityInfo | null) => {
+    if (!info) {
+      return `
+        <div style="font-family: sans-serif; padding: 8px; max-width: 300px;">
+          <h4 style="margin: 0 0 8px 0; color: #333; font-size: 14px; font-weight: bold;">${municipioNome}</h4>
+          <p style="margin: 0; font-size: 12px; color: #666;">Nenhum dado disponível</p>
+        </div>
+      `;
+    }
+
+    const orgaosAtivos = info.orgaos.filter(orgao => orgao.valor > 0);
+    const orgaosInativos = info.orgaos.filter(orgao => orgao.valor === 0);
+
+    return `
+      <div style="font-family: sans-serif; padding: 8px; max-width: 300px;">
+        <h4 style="margin: 0 0 8px 0; color: #333; font-size: 14px; font-weight: bold;">${info.name}</h4>
+        
+        <div style="margin-bottom: 8px; padding: 6px; background: #f8f9fa; border-radius: 4px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-size: 12px; color: #555;">Média Geral:</span>
+            <span style="font-size: 13px; font-weight: bold; color: #2563eb;">${info.mediaGeral.toFixed(1)}%</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-size: 12px; color: #555;">Nível:</span>
+            <span style="font-size: 13px; font-weight: bold; color: ${getNivelColor(info.melhorNivel)};">${info.melhorNivel}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; color: #555;">Órgãos:</span>
+            <span style="font-size: 13px; font-weight: bold; color: #555;">${orgaosAtivos.length} ativos</span>
+          </div>
+        </div>
+
+        ${orgaosAtivos.length > 0 ? `
+          <div style="margin-bottom: 6px;">
+            <p style="margin: 0 0 4px 0; font-size: 11px; color: #666; font-weight: bold;">Órgãos Ativos:</p>
+            ${orgaosAtivos.slice(0, 3).map(orgao => `
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; padding: 3px 0; border-bottom: 1px solid #eee;">
+                <span style="font-size: 11px; color: #444;">${orgao.nome.split(' de ')[0]}</span>
+                <span style="font-size: 11px; font-weight: bold; color: ${getNivelColor(orgao.nivel_final)};">${orgao.valor.toFixed(1)}%</span>
+              </div>
+            `).join('')}
+            ${orgaosAtivos.length > 3 ? `
+              <p style="margin: 2px 0 0 0; font-size: 10px; color: #666; font-style: italic;">+${orgaosAtivos.length - 3} outros órgãos</p>
+            ` : ''}
+          </div>
+        ` : ''}
+
+        ${orgaosInativos.length > 0 ? `
+          <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed #ddd;">
+            <p style="margin: 0 0 4px 0; font-size: 11px; color: #999; font-weight: bold;">Órgãos Inativos:</p>
+            <p style="margin: 0; font-size: 10px; color: #999;">${orgaosInativos.length} órgãos sem dados</p>
+          </div>
+        ` : ''}
+
+        <div style="margin-top: 8px; text-align: center;">
+          <p style="margin: 0; font-size: 10px; color: #888;">Clique para ver detalhes completos</p>
+        </div>
+      </div>
+    `;
+  };
+
   // Inicialização e atualização do mapa
   useEffect(() => {
     if (!mapRef.current) return;
@@ -212,6 +274,16 @@ const MapaPrincipal: React.FC = () => {
         
         const municipioNome = feature.properties.NM_MUNICIP || feature.properties.name || 'Desconhecido';
         const info = municipalitiesData[municipioNome];
+
+        // Tooltip com informações do município
+        const tooltipContent = createTooltipContent(municipioNome, info || null);
+        layer.bindTooltip(tooltipContent, {
+          permanent: false,
+          direction: 'auto',
+          className: 'custom-tooltip',
+          offset: [0, 0],
+          opacity: 0.9
+        });
 
         if (info) {
           const popupContent = `
