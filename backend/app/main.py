@@ -59,6 +59,138 @@ app.add_middleware(
 app.include_router(maps_router)
 
 # ================================
+# NOVOS ENDPOINTS PARA INTEGRAÇÃO COM FRONTEND - ADICIONE AQUI
+# ================================
+# Adicione este endpoint após os outros endpoints no main.py:
+
+@app.get("/api/dimensoes-disponiveis")
+async def obter_dimensoes_disponiveis(poder: str, esfera: str = ""):
+    """
+    Retorna as dimensões disponíveis para um poder específico
+    """
+    try:
+        criterios_poder = obter_criterios_por_poder(poder, esfera)
+        
+        # Extrair dimensões únicas
+        dimensoes = set()
+        for criterio_data in criterios_poder.values():
+            dimensoes.add(criterio_data['dimensao'])
+        
+        # Ordenar dimensões alfabeticamente
+        dimensoes_ordenadas = sorted(list(dimensoes))
+        
+        return {
+            "dimensoes": dimensoes_ordenadas,
+            "total_dimensoes": len(dimensoes_ordenadas)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao carregar dimensões: {str(e)}")
+
+@app.get("/api/orgaos-para-auditoria")
+async def obter_orgaos_para_auditoria():
+    """
+    Converte ORGAOS_DATA para o formato esperado pelos dropdowns do frontend
+    Retorna apenas site e transparencia para cada órgão
+    """
+    try:
+        orgaos_formatados = {}
+        
+        for esfera, poderes in ORGAOS_DATA.items():
+            orgaos_formatados[esfera] = {}
+            for poder, orgaos in poderes.items():
+                orgaos_formatados[esfera][poder] = {}
+                for nome_orgao, dados in orgaos.items():
+                    orgaos_formatados[esfera][poder][nome_orgao] = {
+                        "site": dados.get("site", ""),
+                        "transparencia": dados.get("transparencia", "")
+                    }
+        
+        return orgaos_formatados
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao carregar dados dos órgãos: {str(e)}")
+
+@app.get("/api/orgaos-mapa")
+async def obter_orgaos_para_mapa(
+    esfera: Optional[str] = None,
+    poder: Optional[str] = None,
+    municipio: Optional[str] = None,
+    raio_km: Optional[float] = None
+):
+    """
+    Converte ORGAOS_DATA para o formato esperado pelo mapa
+    Inclui coordenadas, endereços e permite filtros
+    """
+    try:
+        # Importar função de cálculo de distância
+        from .services.orgaos_data import obter_distancia_de_manaus
+        
+        orgaos_lista = []
+        id_counter = 1
+        
+        for esfera_key, poderes in ORGAOS_DATA.items():
+            # Filtro por esfera
+            if esfera and esfera_key != esfera:
+                continue
+                
+            for poder_key, orgaos in poderes.items():
+                # Filtro por poder
+                if poder and poder_key != poder:
+                    continue
+                    
+                for nome_orgao, dados in orgaos.items():
+                    # Extrair município do nome ou endereço
+                    municipio_orgao = "Manaus"  # Padrão
+                    
+                    if esfera_key == "Municipal":
+                        if "Prefeitura de " in nome_orgao:
+                            municipio_orgao = nome_orgao.replace("Prefeitura de ", "").replace(" (PMM)", "")
+                        elif "Câmara Municipal de " in nome_orgao:
+                            municipio_orgao = nome_orgao.replace("Câmara Municipal de ", "")
+                    
+                    # Filtro por município
+                    if municipio and municipio_orgao != municipio:
+                        continue
+                    
+                    # Obter coordenadas
+                    coordenadas = dados.get("coordenadas", {})
+                    latitude = coordenadas.get("latitude", -3.10719)  # Padrão Manaus
+                    longitude = coordenadas.get("longitude", -60.02173)
+                    
+                    # Calcular distância de Manaus
+                    distancia_manaus = 0
+                    if municipio_orgao != "Manaus" and coordenadas:
+                        try:
+                            distancia_manaus = obter_distancia_de_manaus(coordenadas)
+                        except:
+                            distancia_manaus = 0
+                    
+                    # Filtro por raio
+                    if raio_km and distancia_manaus > raio_km:
+                        continue
+                    
+                    orgao_map = {
+                        "id": str(id_counter),
+                        "nome": nome_orgao,
+                        "endereco": dados.get("endereco", ""),
+                        "latitude": latitude,
+                        "longitude": longitude,
+                        "site": dados.get("site", ""),
+                        "transparencia": dados.get("transparencia", ""),
+                        "tipo": f"{esfera_key} - {poder_key}",
+                        "esfera": esfera_key,
+                        "poder": poder_key,
+                        "municipio": municipio_orgao,
+                        "distancia_manaus": round(distancia_manaus, 1) if distancia_manaus else 0
+                    }
+                    
+                    orgaos_lista.append(orgao_map)
+                    id_counter += 1
+        
+        return orgaos_lista
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao carregar dados do mapa: {str(e)}")
+
+# ================================
 # SCHEMAS PARA A API
 # ================================
 class AuditoriaRequest(BaseModel):
@@ -67,6 +199,11 @@ class AuditoriaRequest(BaseModel):
     site_url: Optional[str] = None
     esfera: str
     poder: str
+    dimensoes_selecionadas: Optional[List[str]] = None  # ← NOVO CAMPO
+
+    # Adicione esta nova classe também:
+class DimensoesDisponiveis(BaseModel):
+    dimensoes: List[str]
 
 # ================================
 # DATACLASSES
@@ -182,10 +319,22 @@ def obter_criterios_por_poder(poder_selecionado, esfera_selecionada=""):
             criterios_aplicaveis.update(CRITERIOS_ESTATAIS)
     return criterios_aplicaveis
 
-def converter_criterios_para_auditoria(criterios_dict):
-    """Converte o dicionário de critérios modulados para o formato da classe AuditoriaTransparenciaCriterios"""
+# Substitua a função converter_criterios_para_auditoria no main.py:
+
+def converter_criterios_para_auditoria(criterios_dict, dimensoes_filtro=None):
+    """
+    Converte o dicionário de critérios modulados para o formato da classe AuditoriaTransparenciaCriterios
+    
+    Args:
+        criterios_dict: Dicionário com todos os critérios
+        dimensoes_filtro: Lista de dimensões para filtrar (opcional)
+    """
     criterios_auditoria = {}
     for id_criterio, dados in criterios_dict.items():
+        # Se há filtro de dimensões, verificar se a dimensão está incluída
+        if dimensoes_filtro and dados['dimensao'] not in dimensoes_filtro:
+            continue
+            
         criterios_auditoria[id_criterio] = CriterioAuditoria(
             dimensao=dados['dimensao'],
             id_criterio=dados['id'],
@@ -211,7 +360,7 @@ def gerar_seletores_automaticos(palavras_chave):
             f"a[href*='{palavra_limpa}']",
             f".{palavra_limpa}",
             f"#{palavra_limpa}",
-            f"a:contains('{palavra.title()}')"
+            f"a:-soup-contains('{palavra.title()}')"
         ])
     return seletores
 
@@ -491,17 +640,40 @@ async def root():
 async def get_orgaos():
     return ORGAOS_DATA
 
+# Substitua o endpoint /api/auditoria/iniciar no main.py:
+
 @app.post("/api/auditoria/iniciar")
 async def iniciar_auditoria(request: AuditoriaRequest):
     try:
         criterios_poder = obter_criterios_por_poder(request.poder, request.esfera)
-        criterios_auditoria = converter_criterios_para_auditoria(criterios_poder)
+        
+        # ✅ APLICAR FILTRO DE DIMENSÕES SE FORNECIDO
+        criterios_auditoria = converter_criterios_para_auditoria(
+            criterios_poder, 
+            request.dimensoes_selecionadas
+        )
+        
+        # Verificar se há critérios após o filtro
+        if not criterios_auditoria:
+            raise HTTPException(
+                status_code=400, 
+                detail="Nenhum critério encontrado para as dimensões selecionadas"
+            )
+        
         auditor = AuditoriaTransparenciaCriterios(criterios_auditoria)
         resultado = await auditor.auditoria_completa_async(
             request.transparencia_url,
             request.orgao_nome,
             request.site_url
         )
+        
+        # Adicionar informações sobre o filtro aplicado
+        resultado["filtro_aplicado"] = {
+            "dimensoes_selecionadas": request.dimensoes_selecionadas,
+            "total_criterios_filtrados": len(criterios_auditoria),
+            "auditoria_completa": request.dimensoes_selecionadas is None
+        }
+        
         return {
             "status": "completed",
             "resultado": resultado

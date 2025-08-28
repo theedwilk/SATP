@@ -20,7 +20,22 @@ export interface OrgaosData {
   };
 }
 
-// Interfaces para a resposta da auditoria
+// ✅ ADICIONAR ESTAS NOVAS INTERFACES:
+export interface DimensoesResponse {
+  dimensoes: string[];
+  total_dimensoes: number;
+}
+
+export interface AuditoriaRequestFrontend {
+  transparencia_url: string;
+  orgao_nome: string;
+  site_url?: string;
+  esfera: string;
+  poder: string;
+  dimensoes_selecionadas?: string[]; // ← NOVO CAMPO
+}
+
+// Interfaces para a resposta da auditoria (suas interfaces existentes permanecem)
 export interface CriterioVerificado {
   dimensao: string;
   id_criterio: string;
@@ -45,7 +60,12 @@ export interface AuditoriaResponse {
   tempo_auditoria_segundos: number;
   metricas_conformidade: MetricasConformidade;
   criterios_verificados: CriterioVerificado[];
-  // Adicione outros campos se sua API retornar
+  // ✅ ADICIONAR ESTE CAMPO:
+  filtro_aplicado?: {
+    dimensoes_selecionadas?: string[];
+    total_criterios_filtrados: number;
+    auditoria_completa: boolean;
+  };
 }
 
 class ApiService {
@@ -56,44 +76,28 @@ class ApiService {
   static async obterOrgaos(): Promise<OrgaosData> {
     try {
       // Exemplo de chamada real à API:
-      // const response = await api.get<OrgaosData>('/api/orgaos-para-auditoria');
-      // return response.data;
+      const response = await api.get<OrgaosData>('/api/orgaos-para-auditoria');
+      return response.data;
       
-      // Dados mockados para simular o retorno da API enquanto a API real não está pronta
-      const mockData: OrgaosData = {
-        'Federal': {
-          'Executivo': {
-            'Presidência da República': { site: 'http://www.gov.br', transparencia: 'http://www.gov.br/transparencia' },
-            'Ministério da Fazenda': { site: 'http://www.fazenda.gov.br', transparencia: 'http://www.fazenda.gov.br/acesso-a-informacao' },
-            'Ministério da Saúde': { site: 'http://www.saude.gov.br', transparencia: 'http://www.saude.gov.br/acesso-a-informacao' },
-          },
-          'Legislativo': {
-            'Câmara dos Deputados': { site: 'http://www.camara.leg.br', transparencia: 'http://www.camara.leg.br/transparencia' },
-            'Senado Federal': { site: 'http://www.senado.leg.br', transparencia: 'http://www.senado.leg.br/transparencia' },
-          },
-          'Judiciário': {
-            'Supremo Tribunal Federal': { site: 'http://www.stf.jus.br', transparencia: 'http://www.stf.jus.br/portal/transparencia' },
-          },
-        },
-        'Estadual': {
-          'Executivo': {
-            'Governo do Amazonas': { site: 'http://www.amazonas.am.gov.br', transparencia: 'http://www.amazonas.am.gov.br/transparencia' },
-            'Secretaria de Saúde do AM': { site: 'http://www.saude.am.gov.br', transparencia: 'http://www.saude.am.gov.br/transparencia' },
-          },
-          'Legislativo': {
-            'Assembleia Legislativa do AM': { site: 'http://www.aleam.gov.br', transparencia: 'http://www.aleam.gov.br/transparencia' },
-          },
-        },
-        'Municipal': {
-          'Executivo': {
-            'Prefeitura de Manaus': { site: 'http://www.manaus.am.gov.br', transparencia: 'http://www.manaus.am.gov.br/transparencia' },
-          },
-        },
-      };
-      return mockData;
+      // Dados mockados comentados...
     } catch (error) {
       console.error('Erro ao obter dados de órgãos:', error);
       throw new Error('Não foi possível carregar os dados dos órgãos.');
+    }
+  }
+
+  // ✅ ADICIONAR ESTE NOVO MÉTODO:
+  static async obterDimensoesDisponiveis(poder: string, esfera: string = ""): Promise<DimensoesResponse> {
+    try {
+      const params = new URLSearchParams();
+      params.append('poder', poder);
+      if (esfera) params.append('esfera', esfera);
+      
+      const response = await api.get<DimensoesResponse>(`/api/dimensoes-disponiveis?${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao obter dimensões:', error);
+      throw new Error('Não foi possível carregar as dimensões disponíveis.');
     }
   }
 
@@ -102,11 +106,8 @@ class ApiService {
    * Na vida real, esta função faria uma chamada POST para sua API de auditoria.
    */
   static async realizarAuditoria(siteUrl: string, transparenciaUrl?: string): Promise<AuditoriaResponse> {
+    // ✅ ESTE MÉTODO PERMANECE IGUAL (é só para mock/teste)
     try {
-      // Exemplo de chamada real à API:
-      // const response = await api.post<AuditoriaResponse>('/api/auditoria', { siteUrl, transparenciaUrl });
-      // return response.data;
-
       // Simulação de uma resposta de auditoria para fins de desenvolvimento
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simula delay da API
 
@@ -125,7 +126,7 @@ class ApiService {
           id_criterio: 'AI-002',
           criterio: 'Publicação de dados sobre despesas e receitas.',
           classificacao: 'Obrigatória',
-          disponivel: Math.random() > 0.3, // Aleatório para simular falhas
+          disponivel: Math.random() > 0.3,
           link_evidencia: Math.random() > 0.3 ? `${transparenciaUrl}/orcamento` : undefined,
           metodo_encontrado: 'Verificação de links e palavras-chave',
         },
@@ -163,11 +164,11 @@ class ApiService {
       const percentual = total > 0 ? (conformes / total) * 100 : 0;
 
       const response: AuditoriaResponse = {
-        orgao_auditado: siteUrl, // Ou o nome do órgão
+        orgao_auditado: siteUrl,
         url_site: siteUrl,
         url_transparencia: transparenciaUrl,
         data_auditoria: new Date().toISOString(),
-        tempo_auditoria_segundos: 5 + Math.random() * 10, // Simula tempo
+        tempo_auditoria_segundos: 5 + Math.random() * 10,
         metricas_conformidade: {
           total_criterios: total,
           criterios_conformes: conformes,

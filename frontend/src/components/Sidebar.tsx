@@ -73,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentView, currentView }) => {
       </footer>
 
       <div className={`mt-auto text-center text-sm text-blue-200 ${isCollapsed ? 'hidden' : ''}`}>
-        &copy; 2025 SAPT
+        &copy; 2025 SATP
       </div>
     </aside>
   );
