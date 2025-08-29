@@ -3,21 +3,18 @@ set -e
 
 echo "🚀 PNTP - Iniciando build fullstack..."
 
-# Verificar arquivos essenciais
+# Mover para a pasta do frontend e verificar o package.json lá
+cd frontend
 if [ ! -f "package.json" ]; then
-    echo "❌ Erro: package.json não encontrado!"
+    echo "❌ Erro: package.json não encontrado na pasta 'frontend'!"
     exit 1
 fi
-
-if [ ! -f "app/main.py" ]; then
-    echo "❌ Erro: app/main.py não encontrado!"
-    exit 1
-fi
+echo "✅ package.json encontrado!"
 
 # Mostrar versões
 echo "📋 Versões instaladas:"
 echo "   Python: $(python --version)"
-echo "   Node: $(node --version)"  
+echo "   Node: $(node --version)"
 echo "   NPM: $(npm --version)"
 
 # Instalar dependências do frontend
@@ -34,6 +31,9 @@ if [ ! -d "build" ]; then
     exit 1
 fi
 
+# Voltar para a pasta raiz do projeto
+cd ..
+
 # Instalar dependências Python
 echo "🐍 Instalando dependências Python..."
 pip install -r requirements.txt
@@ -41,7 +41,10 @@ pip install -r requirements.txt
 # Preparar diretório estático
 echo "📁 Configurando arquivos estáticos..."
 mkdir -p app/static
-cp -r build/* app/static/
+
+# Copiar os arquivos do frontend build para o diretório do backend
+# O caminho agora é 'frontend/build'
+cp -r frontend/build/* app/static/
 
 # Verificações finais
 if [ ! -f "app/static/index.html" ]; then
