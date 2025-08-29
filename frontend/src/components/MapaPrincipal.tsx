@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import orgaosRanking2024 from '../data/orgaos_amazonas_ranking_2024.json';
@@ -16,7 +16,7 @@ L.Icon.Default.mergeOptions({
 // Interfaces para tipagem
 export interface GeoJSONFeature extends Feature<Geometry, GeoJsonProperties> {
   properties: {
-    NM_MUNICIP?: string;
+    NM_MUN?: string;
     name?: string;
     [key: string]: any;
   };
@@ -40,6 +40,12 @@ interface MunicipalityInfo {
   melhorNivel: string;
   posicaoRanking: number;
   centroid?: L.LatLngExpression;
+}
+
+// Interface para layer com propriedades customizadas
+interface CustomLayer extends L.Path {
+  feature?: GeoJSONFeature;
+  municipioNome?: string;
 }
 
 // Enum para os tipos de poder
@@ -74,6 +80,38 @@ const MapaPrincipal: React.FC = () => {
   const [selectedMunicipalityDetails, setSelectedMunicipalityDetails] = useState<MunicipalityInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [municipalitiesData, setMunicipalitiesData] = useState<{ [key: string]: MunicipalityInfo }>({});
+
+  // Função para obter o estilo do polígono - movida para useCallback para resolver warning do ESLint
+  const getStyle = useCallback((feature: GeoJSONFeature | undefined) => {
+    if (!feature || !feature.properties) {
+      return {
+        fillColor: '#22c55e', // Verde claro padrão
+        weight: 1,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+      };
+    }
+
+    const municipioNome = feature.properties.NM_MUN || feature.properties.name || 'Desconhecido';
+    const info = municipalitiesData[municipioNome];
+    
+    // VERDE CLARO como cor padrão para todos os municípios
+    const baseColor = info ? getNivelColor(info.melhorNivel) : '#22c55e';
+
+    // Verifica se este município é o que está atualmente selecionado
+    const isSelected = municipioNome === selectedMunicipalityName;
+
+    return {
+      fillColor: isSelected ? '#047857' : baseColor, // Verde escuro para selecionado, cor base caso contrário
+      weight: isSelected ? 3 : 1,
+      opacity: 1,
+      color: isSelected ? '#374151' : 'white',
+      dashArray: '3',
+      fillOpacity: isSelected ? 0.9 : 0.7
+    };
+  }, [municipalitiesData, selectedMunicipalityName]);
 
   // Processa os dados dos órgãos para criar informações por município
   useEffect(() => {
@@ -137,44 +175,13 @@ const MapaPrincipal: React.FC = () => {
     setSelectedMunicipalityName(null);
     if (geoJsonLayerRef.current) {
       // Reseta o estilo de todas as camadas
-      geoJsonLayerRef.current.eachLayer((layer: any) => {
-        if (layer.feature && geoJsonLayerRef.current) {
-          geoJsonLayerRef.current.resetStyle(layer);
+      geoJsonLayerRef.current.eachLayer((layer) => {
+        const customLayer = layer as CustomLayer;
+        if (customLayer.feature && geoJsonLayerRef.current) {
+          geoJsonLayerRef.current.resetStyle(customLayer);
         }
       });
     }
-  };
-
-  // Função para obter o estilo do polígono
-  const getStyle = (feature: GeoJSONFeature | undefined) => {
-    if (!feature || !feature.properties) {
-      return {
-        fillColor: '#22c55e', // Verde claro padrão
-        weight: 1,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.7
-      };
-    }
-
-    const municipioNome = feature.properties.NM_MUNICIP || feature.properties.name || 'Desconhecido';
-    const info = municipalitiesData[municipioNome];
-    
-    // VERDE CLARO como cor padrão para todos os municípios
-    const baseColor = info ? getNivelColor(info.melhorNivel) : '#22c55e';
-
-    // Verifica se este município é o que está atualmente selecionado
-    const isSelected = municipioNome === selectedMunicipalityName;
-
-    return {
-      fillColor: isSelected ? '#047857' : baseColor, // Verde escuro para selecionado, cor base caso contrário
-      weight: isSelected ? 3 : 1,
-      opacity: 1,
-      color: isSelected ? '#374151' : 'white',
-      dashArray: '3',
-      fillOpacity: isSelected ? 0.9 : 0.7
-    };
   };
 
   // Função para criar conteúdo do tooltip com dados dos órgãos
@@ -272,7 +279,7 @@ const MapaPrincipal: React.FC = () => {
       onEachFeature: (feature: GeoJSONFeature, layer) => {
         if (!feature.properties) return;
         
-        const municipioNome = feature.properties.NM_MUNICIP || feature.properties.name || 'Desconhecido';
+        const municipioNome = feature.properties.NM_MUN || feature.properties.name || 'Desconhecido';
         const info = municipalitiesData[municipioNome];
 
         // Tooltip com informações do município
@@ -307,46 +314,43 @@ const MapaPrincipal: React.FC = () => {
         }
 
         // Armazena o nome do município no layer para acesso posterior
-        (layer as any).municipioNome = municipioNome;
+        (layer as CustomLayer).municipioNome = municipioNome;
 
         layer.on({
           click: (e) => {
             if (!feature.properties) return;
-            const clickedMunicipioNome = feature.properties.NM_MUNICIP || feature.properties.name || 'Desconhecido';
+            const clickedMunicipioNome = feature.properties.NM_MUN || feature.properties.name || 'Desconhecido';
 
+            // CORREÇÃO DO BUG: Reset todos os estilos primeiro
+            if (geoJsonLayerRef.current) {
+              geoJsonLayerRef.current.eachLayer((layer) => {
+                const customLayer = layer as CustomLayer;
+                if (customLayer.feature) {
+                  const originalStyle = getStyle(customLayer.feature);
+                  customLayer.setStyle(originalStyle);
+                }
+              });
+            }
+
+            // Define seleção
             if (selectedMunicipalityName === clickedMunicipioNome) {
               setSelectedMunicipalityName(null);
             } else {
               setSelectedMunicipalityName(clickedMunicipioNome);
-            }
-
-            // Atualiza o estilo de TODOS os layers manualmente
-            if (geoJsonLayerRef.current) {
-              geoJsonLayerRef.current.eachLayer((layer: any) => {
-                if (layer.setStyle) {
-                  const featureMunicipio = layer.municipioNome;
-                  const isThisSelected = featureMunicipio === clickedMunicipioNome && selectedMunicipalityName !== clickedMunicipioNome;
-                  
-                  if (isThisSelected) {
-                    layer.setStyle({
-                      fillColor: '#047857',
-                      weight: 3,
-                      color: '#374151',
-                      fillOpacity: 0.9
-                    });
-                  } else {
-                    // Reseta o estilo para o padrão
-                    const originalStyle = getStyle(layer.feature);
-                    layer.setStyle(originalStyle);
-                  }
-                }
+              
+              // Aplica estilo apenas no clicado
+              (e.target as CustomLayer).setStyle({
+                fillColor: '#047857',
+                weight: 3,
+                color: '#374151',
+                fillOpacity: 0.9
               });
             }
           },
           mouseover: (e) => {
             if (!feature.properties) return;
-            const layer = e.target;
-            const hoveredMunicipioNome = feature.properties.NM_MUNICIP || feature.properties.name || 'Desconhecido';
+            const layer = e.target as CustomLayer;
+            const hoveredMunicipioNome = feature.properties.NM_MUN || feature.properties.name || 'Desconhecido';
 
             // Aplica estilo de hover apenas se não for o município atualmente selecionado
             if (hoveredMunicipioNome !== selectedMunicipalityName) {
@@ -360,12 +364,12 @@ const MapaPrincipal: React.FC = () => {
             layer.bringToFront();
           },
           mouseout: (e) => {
-            const layer = e.target;
-            const hoveredMunicipioNome = (layer as any).municipioNome;
+            const layer = e.target as CustomLayer;
+            const hoveredMunicipioNome = layer.municipioNome;
             
             // Reseta o estilo apenas se não for o município selecionado
             if (hoveredMunicipioNome !== selectedMunicipalityName) {
-              const originalStyle = getStyle((layer as any).feature);
+              const originalStyle = getStyle(layer.feature);
               layer.setStyle(originalStyle);
             }
           }
@@ -380,7 +384,7 @@ const MapaPrincipal: React.FC = () => {
     }
 
     setIsLoading(false);
-  }, [mapInstanceRef.current, municipalitiesData, selectedMunicipalityName]);
+  }, [municipalitiesData, selectedMunicipalityName, getStyle]);
 
   return (
     <div className="relative h-screen w-full flex">
@@ -390,6 +394,40 @@ const MapaPrincipal: React.FC = () => {
         </div>
       )}
       <div ref={mapRef} className="flex-1 h-full z-10"></div>
+
+      {/* Legenda das Cores */}
+      <div className="absolute left-4 top-4 bg-white rounded-lg shadow-lg p-3 z-20 max-w-64">
+        <h3 className="text-xs font-semibold text-gray-800 mb-2">Nível dos Municípios</h3>
+        <div className="space-y-1">
+          {[
+            { nivel: 'Diamante', cor: '#0891b2', descricao: 'Excelente' },
+            { nivel: 'Ouro', cor: '#d97706', descricao: 'Muito Bom' },
+            { nivel: 'Elevado', cor: '#059669', descricao: 'Bom' },
+            { nivel: 'Intermediário', cor: '#2563eb', descricao: 'Regular' },
+            { nivel: 'Básico', cor: '#ea580c', descricao: 'Básico' },
+            { nivel: 'Inicial', cor: '#dc2626', descricao: 'Inicial' },
+            { nivel: 'Inexistente', cor: '#6b7280', descricao: 'Sem dados' },
+            { nivel: 'Sem dados', cor: '#22c55e', descricao: 'Não avaliado' }
+          ].map((item) => (
+            <div key={item.nivel} className="flex items-center gap-2">
+              <div 
+                className="w-3 h-3 rounded-full border border-gray-300" 
+                style={{ backgroundColor: item.cor }}
+              ></div>
+              <div className="flex-1">
+                <span className="text-xs font-medium text-gray-700">{item.nivel}</span>
+                <span className="text-xs text-gray-500 ml-1">({item.descricao})</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+
+        
+        <div className="mt-2 text-xs text-gray-500">
+          Clique nos municípios para ver detalhes
+        </div>
+      </div>
 
       {/* Painel de Detalhes do Município */}
       {selectedMunicipalityDetails && (

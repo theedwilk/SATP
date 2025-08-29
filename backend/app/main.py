@@ -17,6 +17,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import re
 from dataclasses import dataclass
+import os
 
 # ================================
 # IMPORTS DOS MÓDULOS ESPECÍFICOS - CORRIGIDOS
@@ -45,9 +46,21 @@ from .maps_api import router as maps_router
 # CONFIGURAÇÃO DO FASTAPI
 # ================================
 app = FastAPI(title="PNTP API", version="2.0.0")
+
+# CORS configurado para produção e desenvolvimento
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+CORS_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    FRONTEND_URL,  # URL do frontend no Render
+]
+
+# Remove duplicatas e URLs vazias
+CORS_ORIGINS = list(set(filter(None, CORS_ORIGINS)))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -647,7 +660,7 @@ async def iniciar_auditoria(request: AuditoriaRequest):
     try:
         criterios_poder = obter_criterios_por_poder(request.poder, request.esfera)
         
-        # ✅ APLICAR FILTRO DE DIMENSÕES SE FORNECIDO
+        # APLICAR FILTRO DE DIMENSÕES SE FORNECIDO
         criterios_auditoria = converter_criterios_para_auditoria(
             criterios_poder, 
             request.dimensoes_selecionadas
@@ -680,3 +693,8 @@ async def iniciar_auditoria(request: AuditoriaRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro na auditoria: {str(e)}")
+
+# Endpoint adicional para health check
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "environment": os.getenv("ENVIRONMENT", "development")}
