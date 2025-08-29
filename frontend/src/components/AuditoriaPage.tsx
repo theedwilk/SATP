@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ApiService, { AuditoriaResponse, OrgaosData, DimensoesResponse } from '../services/api';
+import ApiService, { AuditoriaResponse, OrgaosData } from '../services/api';
 import { OrgaosApiService } from '../services/orgaosApi';
 import { OrgaoMap } from '../types/orgaos';
 import MapaOrgaos from './MapaOrgaos';
