@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: pntp TCE AM
+    env: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: ./start.sh
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: FRONTEND_URL
+        value: https://pntptce.onrender.com
+      - key: NODE_VERSION
+        value: "18"
+    healthCheckPath: /health
