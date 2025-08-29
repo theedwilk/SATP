@@ -607,16 +607,14 @@ const AuditoriaPage: React.FC = () => {
                             </td>
                             <td className="px-4 py-3 text-center">
                               {item.link_evidencia ? (
-                                <a
-                                  href="#"
-                                  onClick={(e) => {
-                                    e.preventDefault();
+                                <button
+                                  onClick={() => {
                                     window.open(item.link_evidencia, '_blank', 'noopener,noreferrer');
                                   }}
-                                  className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
+                                  className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer bg-transparent border-none p-0"
                                 >
                                   🔗 Ver
-                                </a>
+                                </button>
                               ) : (
                                 <span className="text-gray-400">N/A</span>
                               )}
