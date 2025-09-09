@@ -49,8 +49,10 @@ from .maps_api import router as maps_router
 # ================================
 app = FastAPI(title="PNTP API", version="2.0.0")
 # ADICIONAR ESTAS LINHAS AQUI:
-# Servir arquivos estáticos do React
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+# Servir arquivos estáticos do React (condicional)
+import os
+if os.path.exists("app/static"):
+    app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # CORS configurado para produção e desenvolvimento
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
