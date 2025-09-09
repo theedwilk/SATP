@@ -18,6 +18,8 @@ from urllib.parse import urljoin, urlparse
 import re
 from dataclasses import dataclass
 import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 # ================================
 # IMPORTS DOS MÓDULOS ESPECÍFICOS - CORRIGIDOS
@@ -46,6 +48,9 @@ from .maps_api import router as maps_router
 # CONFIGURAÇÃO DO FASTAPI
 # ================================
 app = FastAPI(title="PNTP API", version="2.0.0")
+# ADICIONAR ESTAS LINHAS AQUI:
+# Servir arquivos estáticos do React
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # CORS configurado para produção e desenvolvimento
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
@@ -646,9 +651,13 @@ async def executar_auditoria_background(session_id: str, request: AuditoriaReque
 # Endpoints da API
 # Seus endpoints existentes continuam aqui
 @app.get("/")
-async def root():
-    return {"message": "PNTP API funcionando", "version": "2.0.0"}
+async def serve_react():
+    return FileResponse("app/static/index.html")
 
+@app.get("/api/status")
+async def api_status():
+    return {"message": "PNTP API funcionando", "version": "2.0.0"}
+    
 @app.get("/api/orgaos")
 async def get_orgaos():
     return ORGAOS_DATA
@@ -698,3 +707,13 @@ async def iniciar_auditoria(request: AuditoriaRequest):
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "environment": os.getenv("ENVIRONMENT", "development")}
+
+# ADICIONAR AQUI ⬇️
+@app.get("/{full_path:path}")
+async def serve_react_app(full_path: str):
+    # Se for uma rota da API, não interceptar
+    if full_path.startswith("api/"):
+        raise HTTPException(status_code=404, detail="API endpoint not found")
+    
+    # Para qualquer outra rota, servir o React
+    return FileResponse("app/static/index.html")
