@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // Configuração da API baseada no ambiente
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://satptce.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 
+  (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8000');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
