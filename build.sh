@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-
 echo "🚀 PNTP - Iniciando build fullstack..."
 
 # Mover para a pasta do frontend e verificar o package.json lá
@@ -13,9 +12,9 @@ echo "✅ package.json encontrado!"
 
 # Mostrar versões
 echo "📋 Versões instaladas:"
-echo "   Python: $(python --version)"
-echo "   Node: $(node --version)"
-echo "   NPM: $(npm --version)"
+echo " Python: $(python --version)"
+echo " Node: $(node --version)"
+echo " NPM: $(npm --version)"
 
 # Instalar dependências do frontend
 echo "📦 Instalando dependências do React..."
@@ -36,18 +35,17 @@ cd ..
 
 # Instalar dependências Python
 echo "🐍 Instalando dependências Python..."
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 
 # Preparar diretório estático
 echo "📁 Configurando arquivos estáticos..."
-mkdir -p app/static
+mkdir -p backend/app/static
 
 # Copiar os arquivos do frontend build para o diretório do backend
-# O caminho agora é 'frontend/build'
-cp -r frontend/build/* app/static/
+cp -r frontend/build/* backend/app/static/
 
 # Verificações finais
-if [ ! -f "app/static/index.html" ]; then
+if [ ! -f "backend/app/static/index.html" ]; then
     echo "❌ Erro: index.html não foi copiado!"
     exit 1
 fi

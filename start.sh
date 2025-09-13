@@ -2,30 +2,41 @@
 set -e
 echo "🚀 Iniciando PNTP Fullstack..."
 
-# CORRIGIR: Verificar arquivos no local correto
-if [ ! -f "app/main.py" ]; then
-    echo "❌ app/main.py não encontrado!"
+# Verificar arquivos no local correto (estrutura atual)
+if [ ! -f "backend/app/main.py" ]; then
+    echo "❌ backend/app/main.py não encontrado!"
     exit 1
 fi
 
-# Instalar dependências (mantenha como está)
+# Verificar se arquivos estáticos do React existem
+if [ ! -f "backend/app/static/index.html" ]; then
+    echo "⚠️ Arquivos estáticos do React não encontrados em backend/app/static/"
+    echo "Certifique-se que o build foi executado corretamente"
+fi
+
+# Instalar dependências
 if [ -f "backend/requirements.txt" ]; then
     echo "📦 Instalando dependências do backend..."
     pip install -r backend/requirements.txt
 elif [ -f "requirements.txt" ]; then
     echo "📦 Instalando dependências da raiz..."
     pip install -r requirements.txt
+else
+    echo "❌ requirements.txt não encontrado!"
+    exit 1
 fi
 
-# Configurar porta (mantenha como está)
+# Configurar porta
 export PORT=${PORT:-8000}
 echo "🌐 Servidor iniciando na porta $PORT"
 echo "📡 API disponível em: /api/*"
 echo "🎨 React App disponível em: /"
 
-# CORRIGIR: PYTHONPATH e comando uvicorn
-export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-exec uvicorn app.main:app \
+# Ajustar PYTHONPATH para incluir o diretório backend
+export PYTHONPATH="${PYTHONPATH}:$(pwd):$(pwd)/backend"
+
+# Executar servidor
+exec uvicorn backend.app.main:app \
     --host 0.0.0.0 \
     --port $PORT \
     --workers 1 \
