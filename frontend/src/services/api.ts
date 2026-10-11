@@ -120,14 +120,15 @@ class ApiService {
    * Obtém dados dos órgãos para dropdowns da auditoria
    */
   static async obterOrgaos(): Promise<OrgaosData> {
-    try {
-      const response = await api.get<OrgaosData>('/api/orgaos-para-auditoria');
-      return response.data;
-    } catch (error) {
-      console.error('Erro ao obter dados de órgãos:', error);
-      throw new Error('Não foi possível carregar os dados dos órgãos.');
-    }
+  try {
+    // MUDANÇA: /api/orgaos → /api/orgaos-para-auditoria
+    const response = await api.get<OrgaosData>('/api/orgaos-para-auditoria');
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao obter dados de órgãos:', error);
+    throw new Error('Não foi possível carregar os dados dos órgãos.');
   }
+}
 
   /**
    * Obtém órgãos para o mapa com filtros opcionais
